@@ -27,4 +27,4 @@ Otherwise, if you want to attach this script your custom **control.lua** script,
 
 ## Adding extra modules
 
-If you want to add extra modules to the script you can explore file **sneaky_extra.lua** to see the interface information how to register additional functionality to the script.
+If you want to add extra modules to the script you can explore file **sneaky_main.lua** to see the interface description how to register additional functionality to the script.
