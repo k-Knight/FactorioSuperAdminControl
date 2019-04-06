@@ -255,10 +255,10 @@ function draw_additional_menu()
     {
       size = {width = 663},
       padding = {horizontal = 0},
-      margin = {horizontal = 0}
+      margin = {horizontal = 0},
+      spacing = {horizontal = 5}
     }
   )
-  gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel.style.horizontal_spacing = 5
 
   -- close button for the frame
   gui_frame.extras_menu.extra_buttons_table.add{type = "button", name = "extras_close_menu", caption = "Close menu", mouse_button_filter = {"left"}}

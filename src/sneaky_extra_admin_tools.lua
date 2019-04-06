@@ -112,10 +112,10 @@ function extras_admin_tools_draw(frame)
   apply_simple_style(
     frame.ex_at_flow_1,
     {
-      margin = {horizontal = 5, top = 10}
+      margin = {horizontal = 5, top = 10},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_at_flow_1.style.horizontal_spacing = 8
   frame.ex_at_flow_1.add{type = "label", name="ex_at_all_label", caption = "Operations on all players: "}
   apply_simple_style(
     frame.ex_at_flow_1.ex_at_all_label,
@@ -149,10 +149,10 @@ function extras_admin_tools_draw(frame)
   apply_simple_style(
     frame.ex_at_flow_2,
     {
-      margin = {horizontal = 5, top = 5}
+      margin = {horizontal = 5, top = 5},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_at_flow_2.style.horizontal_spacing = 8
   frame.ex_at_flow_2.add{type = "label", name="ex_at_label", caption = "Individual operations: "}
   apply_simple_style(
     frame.ex_at_flow_2.ex_at_label,
@@ -194,10 +194,10 @@ function extras_admin_tools_draw(frame)
   apply_simple_style(
     frame.ex_at_flow_3,
     {
-      margin = {horizontal = 5, top = 5, bottom = 10}
+      margin = {horizontal = 5, top = 5, bottom = 10},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_at_flow_3.style.horizontal_spacing = 8
   frame.ex_at_flow_3.add{type = "label", name="ex_at_label", caption = "Console (and chat) suppression: "}
   apply_simple_style(
     frame.ex_at_flow_3.ex_at_label,
@@ -227,10 +227,10 @@ function extras_admin_tools_draw(frame)
   apply_simple_style(
     frame.ex_at_flow_4,
     {
-      margin = {horizontal = 5, top = 30, bottom = 10}
+      margin = {horizontal = 5, top = 30, bottom = 10},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_at_flow_4.style.horizontal_spacing = 8
   frame.ex_at_flow_4.add{type = "label", name="ex_at_label", caption = "All player manipulation: "}
   apply_simple_style(
     frame.ex_at_flow_4.ex_at_label,

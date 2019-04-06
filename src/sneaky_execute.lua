@@ -19,9 +19,11 @@ function draw_execute_gui(frame, command_string)
   frame.add{type = "frame", caption = "Execute Menu", name = "cheesy_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
   apply_simple_style(
     frame.cheesy_frame,
-    {padding = 10}
+    {
+      padding = 10,
+      margin = {bottom = 5}
+    }
   )
-  frame.cheesy_frame.style.bottom_margin = 5
 
   frame.cheesy_frame.add{type = "textfield", name = "sneaky_string"}
   apply_simple_style(

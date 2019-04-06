@@ -151,10 +151,10 @@ function extras_player_tools_draw(frame)
   apply_simple_style(
     frame.ex_pt_flow_1,
     {
-      margin = {horizontal = 5, top = 10}
+      margin = {horizontal = 5, top = 10},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_pt_flow_1.style.horizontal_spacing = 8
 
   frame.ex_pt_flow_1.add{type = "label", name="ex_pt_select_label", caption = "Select a player: "}
   apply_simple_style(
@@ -178,10 +178,10 @@ function extras_player_tools_draw(frame)
   apply_simple_style(
     frame.ex_pt_flow_2,
     {
-      margin = {horizontal = 5, top = 30}
+      margin = {horizontal = 5, top = 30},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_pt_flow_2.style.horizontal_spacing = 8
 
   frame.ex_pt_flow_2.add{type = "label", name="ex_pt_cheat_label", caption = "Enable cheat mode: "}
   apply_simple_style(
@@ -205,10 +205,10 @@ function extras_player_tools_draw(frame)
   apply_simple_style(
     frame.ex_pt_flow_3,
     {
-      margin = {horizontal = 5, top = 5}
+      margin = {horizontal = 5, top = 5},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_pt_flow_3.style.horizontal_spacing = 8
 
   frame.ex_pt_flow_3.add{type = "label", name="ex_pt_kill_label", caption = "Kill player: "}
   apply_simple_style(
@@ -240,10 +240,10 @@ function extras_player_tools_draw(frame)
   apply_simple_style(
     frame.ex_pt_flow_4,
     {
-      margin = {horizontal = 5, top = 5}
+      margin = {horizontal = 5, top = 5},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_pt_flow_4.style.horizontal_spacing = 8
 
   frame.ex_pt_flow_4.add{type = "label", name="ex_pt_resurrect_label", caption = "Resurrect player: "}
   apply_simple_style(
@@ -267,10 +267,10 @@ function extras_player_tools_draw(frame)
   apply_simple_style(
     frame.ex_pt_flow_5,
     {
-      margin = {horizontal = 5, top = 5}
+      margin = {horizontal = 5, top = 5},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_pt_flow_5.style.horizontal_spacing = 8
 
   frame.ex_pt_flow_5.add{type = "label", name="ex_pt_craft_label", caption = "Crafting speed modifier: "}
   apply_simple_style(
@@ -294,10 +294,10 @@ function extras_player_tools_draw(frame)
   apply_simple_style(
     frame.ex_pt_flow_6,
     {
-      margin = {horizontal = 5, top = 5}
+      margin = {horizontal = 5, top = 5},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_pt_flow_6.style.horizontal_spacing = 8
 
   frame.ex_pt_flow_6.add{type = "label", name="ex_pt_mine_label", caption = "Mining speed modifier: "}
   apply_simple_style(
@@ -321,10 +321,10 @@ function extras_player_tools_draw(frame)
   apply_simple_style(
     frame.ex_pt_flow_7,
     {
-      margin = {horizontal = 5, top = 5}
+      margin = {horizontal = 5, top = 5},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_pt_flow_7.style.horizontal_spacing = 8
 
   frame.ex_pt_flow_7.add{type = "label", name="ex_pt_run_label", caption = "Running speed modifier: "}
   apply_simple_style(
@@ -348,10 +348,10 @@ function extras_player_tools_draw(frame)
   apply_simple_style(
     frame.ex_pt_flow_8,
     {
-      margin = {horizontal = 5, top = 5, bottom = 10}
+      margin = {horizontal = 5, top = 5, bottom = 10},
+      spacing = {horizontal = 8}
     }
   )
-  frame.ex_pt_flow_8.style.horizontal_spacing = 8
 
   frame.ex_pt_flow_8.add{type = "label", name="ex_pt_eq_label", caption = "Equipment manipulation: "}
   apply_simple_style(

@@ -28,24 +28,76 @@ function init_mod()
   global.extras.functionality = {}
 end
 
+-- =========================================================================
 -- ========================== FOR DEVELOPERS ===============================
---                    ===== Interface Desction =====
+-- =========================================================================
+-- ======================= Interface Description ===========================
+-- =========================================================================
+--
+-- ===============================================================================================================================
+--
 --  function (from ./sneaky_extra.lua):
 --      register_extra_functionality(button_caption, draw_function, handlers)
 --
---      description:
---          adds additional functionality to the sneaky script
---      arguments:
---          button_caption: the name of the button (that is displayed to the user)
---          draw_function: draw function of your functionality
---              as an argument should take a frame LuaGuiElement (https://lua-api.factorio.com/latest/LuaGuiElement.html)
---          handlers: table with handlers for gui events, has following elements:
---              on_click: handler function, takes event arguments of on_gui_click event
---              on_checked: handler function, takes event arguments of on_gui_checked_state_changed event
---              on_selected: handler function, takes event arguments of on_gui_selection_state_changed event
---              on_value: handler function, takes event arguments of on_gui_value_changed event
+--        description:
+--            adds additional functionality to the sneaky script
+--        arguments:
+--            button_caption: the name of the button (that is displayed to the user)
+--            draw_function: draw function of your functionality
+--                as an argument should take a frame LuaGuiElement (https://lua-api.factorio.com/latest/LuaGuiElement.html)
+--            handlers: table with handlers for gui events, has following elements:
+--                on_click: handler function, takes event arguments of on_gui_click event
+--                on_checked: handler function, takes event arguments of on_gui_checked_state_changed event
+--                on_selected: handler function, takes event arguments of on_gui_selection_state_changed event
+--                on_value: handler function, takes event arguments of on_gui_value_changed event
 --
 --        for reference on factorio api events: https://lua-api.factorio.com/latest/events.html
+--
+-- ===============================================================================================================================
+--
+--  function (from ./sneaky_styling.lua):
+--      apply_simple_style(gui_element, style)
+--        description:
+--            applies style to the LuaGuiElement (https://lua-api.factorio.com/latest/LuaGuiElement.html)
+--        arguments:
+--            gui_element: LuaGuiElement style of which to change
+--            style: table with style parameters, may have following elements:
+--                size: table, can be nil
+--                    width: table or a number, can be nil
+--                      if number: sets minimal_width and maximal_width to this number
+--                      if table:
+--                        max: number, sets maximal_width
+--                        min: number, sets minimal_width
+--                    height: table or a number, can be nil
+--                      if number: sets minimal_height and maximal_height to this number
+--                      if table:
+--                        max: number, sets maximal_height
+--                        min: number, sets minimal_height
+--                padding: table or a number, can be nil
+--                  if number: sets right_padding, left_padding, top_padding, bottom_padding to this number
+--                  if table:
+--                    right: number, sets right_padding, can be nil
+--                    left: number, sets left_padding, can be nil
+--                    top: number, sets top_padding, can be nil
+--                    bottom: number, sets bottom_padding, can be nil
+--                    vertical: number, sets top_padding and bottom_padding, can be nil, overrides top and bottom, can be nil
+--                    horizontal: number, sets right_padding and left_padding, can be nil, overrides right and left, can be nil
+--                margin: table or a number, can be nil
+--                  if number: sets right_margin, left_margin, top_margin, bottom_margin to this number
+--                  if table:
+--                    right: number, sets right_margin, can be nil
+--                    left: number, sets left_margin, can be nil
+--                    top: number, sets top_margin, can be nil
+--                    bottom: number, sets bottom_margin, can be nil
+--                    vertical: number, sets top_margin and bottom_margin, can be nil, overrides top and bottom, can be nil
+--                    horizontal: number, sets right_margin and left_margin, can be nil, overrides right and left, can be nil
+--                spacing: table, can be nil
+--                    vertical: number, sets horizontal_spacing, can be nil
+--                    horizontal: number, sets vertical_spacing, can be nil
+--
+--        for reference on factorio api gui element style: https://lua-api.factorio.com/latest/LuaStyle.html
+--
+-- ===============================================================================================================================
 
 
 
