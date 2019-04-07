@@ -8,21 +8,21 @@
 
 SneakyExtrasPlayerTools = {}
 SneakyExtrasPlayerTools.set_gui_values = function(admin, player)
-  if admin.extras.player_tools.parent_frame.valid then
-    if admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.valid then
-      admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.state = player.cheat_mode
-    end
-    if player.character ~= nil then
-      if admin.extras.player_tools.parent_frame.ex_pt_flow_5.ex_pt_craft_slider.valid then
-        admin.extras.player_tools.parent_frame.ex_pt_flow_5.ex_pt_craft_slider.slider_value = player.character_crafting_speed_modifier
-      end
-      if admin.extras.player_tools.parent_frame.ex_pt_flow_6.ex_pt_mine_slider.valid then
-        admin.extras.player_tools.parent_frame.ex_pt_flow_6.ex_pt_mine_slider.slider_value = player.character_mining_speed_modifier
-      end
-      if admin.extras.player_tools.parent_frame.ex_pt_flow_7.ex_pt_run_slider.valid then
-        admin.extras.player_tools.parent_frame.ex_pt_flow_7.ex_pt_run_slider.slider_value = player.character_running_speed_modifier
-      end
-    end
+  SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_2.ex_pt_cheat_checkbox.state = player.cheat_mode
+  if player.character ~= nil then
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_5.ex_pt_craft_slider.slider_value = player.character_crafting_speed_modifier
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_5.ex_pt_craft_slider.enabled = true
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_6.ex_pt_mine_slider.slider_value = player.character_mining_speed_modifier
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_6.ex_pt_mine_slider.enabled = true
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_7.ex_pt_run_slider.slider_value = player.character_running_speed_modifier
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_7.ex_pt_run_slider.enabled = true
+  else
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_5.ex_pt_craft_slider.slider_value = 0.0
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_5.ex_pt_craft_slider.enabled = false
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_6.ex_pt_mine_slider.slider_value = 0.0
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_6.ex_pt_mine_slider.enabled = false
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_7.ex_pt_run_slider.slider_value = 0.0
+    SneakyExtra.get_wrapper_frame(admin).ex_pt_flow_7.ex_pt_run_slider.enabled = false
   end
 end
 
@@ -30,12 +30,10 @@ SneakyExtrasPlayerTools.update_values = function(player)
   if player ~= nil then
     for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
       if admin.extras.player_tools ~= nil then
-        if admin.extras.player_tools.parent_frame ~= nil then
-          local admin_player = game.players[admin.extras.player_tools.player_name]
-          if admin_player ~= nil then
-            if admin_player.name == player.name then
-              SneakyExtrasPlayerTools.set_gui_values(admin, player)
-            end
+        local admin_player = game.players[admin.extras.player_tools.player_name]
+        if admin_player ~= nil then
+          if admin_player.name == player.name then
+            SneakyExtrasPlayerTools.set_gui_values(admin, player)
           end
         end
       end
@@ -135,15 +133,7 @@ SneakyExtrasPlayerTools.on_checked_handler = function(event, superadmin)
 
   if event.element.name == "ex_pt_cheat_checkbox" then
     player.cheat_mode = not player.cheat_mode
-    for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
-      if superadmin.extras.player_tools ~= nil then
-        if superadmin.extras.player_tools.parent_frame ~= nil and superadmin.extras.player_tools.parent_frame.valid then
-          if admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.valid then
-            admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.state = player.cheat_mode
-          end
-        end
-      end
-    end
+    SneakyExtrasPlayerTools.update_values(player)
   end
 end
 
@@ -173,6 +163,32 @@ end
 
 
 -- =======================================================================
+-- ========================== EVENT LISTENING ============================
+-- =======================================================================
+
+
+
+SneakyExtrasPlayerTools.on_event_update = function(event)
+  if event ~= nil then
+    if event.player_index ~= nil then
+      if game.players[event.player_index] ~= nil then
+        SneakyExtrasPlayerTools.update_values(game.players[event.player_index])
+      end
+    end
+  end
+end
+
+KMinimalistBootstrap.register(defines.events.on_player_joined_game, SneakyExtrasPlayerTools.on_event_update)
+KMinimalistBootstrap.register(defines.events.on_player_left_game, SneakyExtrasPlayerTools.on_event_update)
+KMinimalistBootstrap.register(defines.events.on_player_created, SneakyExtrasPlayerTools.on_event_update)
+KMinimalistBootstrap.register(defines.events.on_player_driving_changed_state, SneakyExtrasPlayerTools.on_event_update)
+KMinimalistBootstrap.register(defines.events.on_player_died, SneakyExtrasPlayerTools.on_event_update)
+KMinimalistBootstrap.register(defines.events.on_player_respawned, SneakyExtrasPlayerTools.on_event_update)
+KMinimalistBootstrap.register(defines.events.on_player_removed, SneakyExtrasPlayerTools.on_event_update)
+
+
+
+-- =======================================================================
 -- ============================= GUI SCRIPT ==============================
 -- =======================================================================
 
@@ -182,7 +198,6 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
   if superadmin.extras.player_tools == nil then
     superadmin.extras.player_tools = {}
   end
-  superadmin.extras.player_tools.parent_frame = frame
 
   frame.add{type = "flow", name="ex_pt_flow_1", direction="horizontal"}
   SneakyStyling.apply_simple_style(
@@ -431,4 +446,6 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
       margin = 0
     }
   )
+
+  SneakyExtrasPlayerTools.update_values(game.players[superadmin.extras.player_tools.player_name])
 end

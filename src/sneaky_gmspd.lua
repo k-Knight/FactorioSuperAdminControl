@@ -11,10 +11,8 @@ SneakyGameSpeed.change_speed = function(speed)
   for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
     local admin_gui = admin:get_gui()
 
-    if admin_gui ~= nil then
-      admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text = tostring(global.game_speed)
-      admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_slider.slider_value = global.game_speed
-    end
+    admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text = tostring(global.game_speed)
+    admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_slider.slider_value = global.game_speed
   end
   game.speed = global.game_speed
 end

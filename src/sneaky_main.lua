@@ -6,6 +6,9 @@
 
 
 
+require("./kminimalist_bootstrap.lua") -- KMinimalist Bootstrap
+require("./kminimalist_safe_api_object.lua") -- KMinimalist Safe Api Object (api object proxy)
+
 require("./sneaky_superadmin_mng.lua") -- superadmin management
 require("./sneaky_styling.lua") -- functionality for appying styles to elements
 require("./sneaky_nyan.lua") -- nyan character color functionality
@@ -120,7 +123,7 @@ end
 SneakyScript.toggle_superadmin_menu = function(index)
   local admin = SneakySuperAdminManager.get(index)
   if admin ~= nil then
-    if admin:get_gui().top.sneaky_frame == nil then
+    if admin:get_gui().top.sneaky_frame.is_nil then
       admin.menu_enabled = true
     else
       admin.menu_enabled = false
@@ -158,6 +161,12 @@ SneakyScript.on_player_joined_game_handler = function(event)
     SneakyScript.init()
   end
 
+  local is_super, super_index = SneakySuperAdminManager.is_superadmin(event.player_index)
+  if is_super then
+    local admin = SneakySuperAdminManager.get(super_index)
+    admin.menu_enabled = false
+    SneakyScript.destroy_sneaky_gui(admin)
+  end
   SneakyScript.draw_gui_if_absent()
 end
 
@@ -175,7 +184,7 @@ SneakyScript.on_gui_value_changed_handler = function(event, super_index)
   SneakyExtra.on_gui_value_changed_handler(event, super_index)
 end
 
-SneakyScript.ugly_force_register = function(event, handler)
+KMinimalistBootstrap.register = function(event, handler)
   local old_handler = script.get_event_handler(event)
 
   if old_handler ~= nil then
@@ -189,14 +198,14 @@ SneakyScript.ugly_force_register = function(event, handler)
 end
 
 SneakyScript.create_gui_handler = function(event_name, handler)
-  SneakyScript.ugly_force_register(event_name, function(event)
+  KMinimalistBootstrap.register(event_name, function(event)
     if global.player_name == nil then
       SneakyScript.init()
     end
 
     local is_super, super_index = SneakySuperAdminManager.is_superadmin(event.player_index)
     if is_super then
-      handler(event, super_index)
+      handler(KMinimalistSafeApiObject.new(event), super_index)
     end
   end)
 end
@@ -207,8 +216,8 @@ SneakyScript.create_gui_handler(defines.events.on_gui_click, SneakyScript.on_gui
 SneakyScript.create_gui_handler(defines.events.on_gui_selection_state_changed, SneakyScript.on_gui_selection_state_changed_handler)
 SneakyScript.create_gui_handler(defines.events.on_gui_value_changed, SneakyScript.on_gui_value_changed_handler)
 
-SneakyScript.ugly_force_register(defines.events.on_player_joined_game, SneakyScript.on_player_joined_game_handler)
-SneakyScript.ugly_force_register(defines.events.on_player_left_game, SneakyScript.on_player_left_game_handler)
+KMinimalistBootstrap.register(defines.events.on_player_joined_game, SneakyScript.on_player_joined_game_handler)
+KMinimalistBootstrap.register(defines.events.on_player_left_game, SneakyScript.on_player_left_game_handler)
 
 
 
@@ -221,11 +230,9 @@ SneakyScript.ugly_force_register(defines.events.on_player_left_game, SneakyScrip
 SneakyScript.draw_gui_if_absent = function()
   for index, admin in ipairs(SneakySuperAdminManager.get_all()) do
     local admin_gui = admin:get_gui()
-    if admin_gui ~= nil then
-      if admin_gui.top.sneaky_frame == nil and admin_gui.top.enable_sneaky == nil then
+      if admin_gui.top.sneaky_frame.is_nil and admin_gui.top.enable_sneaky.is_nil then
         SneakyScript.draw_sneaky_gui(index)
       end
-    end
   end
 end
 
@@ -248,13 +255,10 @@ end
 
 SneakyScript.destroy_sneaky_gui = function(superadmin)
   local admin_gui = superadmin:get_gui()
-  if admin_gui.top.enable_sneaky ~= nil then
-    admin_gui.top.enable_sneaky.destroy()
-  end
-  if admin_gui.top.sneaky_frame ~= nil then
-    SneakyExtra.close_additional_menu(superadmin)
-    admin_gui.top.sneaky_frame.destroy()
-  end
+
+  admin_gui.top.enable_sneaky.destroy()
+  SneakyExtra.close_additional_menu(superadmin)
+  admin_gui.top.sneaky_frame.destroy()
 end
 
 SneakyScript.draw_gui_frame = function(superadmin)

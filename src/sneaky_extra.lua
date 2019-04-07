@@ -65,9 +65,7 @@ SneakyExtra.on_gui_click_handler = function(event, super_index)
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.btn_name.internal == event.element.name then
-      if admin_gui.center.extras_menu.extras_wrapper ~= nil then
-        admin_gui.center.extras_menu.extras_wrapper.destroy()
-      end
+      admin_gui.center.extras_menu.extras_wrapper.destroy()
       admin_gui.center.extras_menu.add{type = "frame", caption = functionality.btn_name.caption, name = "extras_wrapper", direction = "vertical", style = "inside_deep_frame_for_tabs"}
       SneakyStyling.apply_simple_style(
         admin_gui.center.extras_menu.extras_wrapper,
@@ -77,8 +75,10 @@ SneakyExtra.on_gui_click_handler = function(event, super_index)
           margin = {horizontal = 5, vertical = 5},
         }
       )
-      for _, btn in pairs(event.element.parent.children) do
-        btn.enabled = true
+      for _, btn in pairs(KMinimalistSafeApiObject.get_unsafe_obj(event.element.parent.children)) do
+        if btn.valid ~= false then
+          btn.enabled = true
+        end
       end
       event.element.enabled = false
       functionality.draw_function(admin_gui.center.extras_menu.extras_wrapper, admin)
@@ -87,9 +87,6 @@ SneakyExtra.on_gui_click_handler = function(event, super_index)
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.click_handler ~= nil then
-      if not event.element.valid then
-        return
-      end
       functionality.click_handler(event, admin)
     end
   end
@@ -104,9 +101,6 @@ SneakyExtra.on_gui_checked_state_changed_handler = function(event, super_index)
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.checkbox_handler ~= nil then
-      if not event.element.valid then
-        return
-      end
       functionality.checkbox_handler(event, admin)
     end
   end
@@ -121,9 +115,6 @@ SneakyExtra.on_gui_selection_state_changed_handler = function(event, super_index
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.select_handler ~= nil then
-      if not event.element.valid then
-        return
-      end
       functionality.select_handler(event, admin)
     end
   end
@@ -138,9 +129,6 @@ SneakyExtra.on_gui_value_changed_handler = function(event, super_index)
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.slider_handler ~= nil then
-      if not event.element.valid then
-        return
-      end
       functionality.slider_handler(event, admin)
     end
   end
@@ -202,10 +190,14 @@ end
 
 
 -- =======================================================================
--- ========================= EXTRAS GUI SCRIPT ==========================
+-- ========================== EXTRAS GUI SCRIPT ==========================
 -- =======================================================================
 
 
+
+SneakyExtra.get_wrapper_frame = function(superadmin)
+  return superadmin:get_gui().center.extras_menu.extras_wrapper
+end
 
 SneakyExtra.draw_btn_gui = function(frame, superadmin)
   local extras_cation = "Open Extras"
@@ -236,9 +228,7 @@ SneakyExtra.close_additional_menu = function(superadmin)
 
   admin_gui.top.sneaky_frame.sneaky_extras_btn.caption = "Open Extras"
 
-  if admin_gui.center.extras_menu ~= nil then
-    admin_gui.center.extras_menu.destroy()
-  end
+  admin_gui.center.extras_menu.destroy()
 end
 
 SneakyExtra.add_btn_to_panel = function(btn_name, superadmin)

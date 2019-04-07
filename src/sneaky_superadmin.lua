@@ -8,24 +8,24 @@ SneakySuperAdmin.new = function(admin_name)
       functionality = {}
     }
   }
-  new_admin.__index = new_admin
+  --new_admin.__index = new_admin
 
   function new_admin:get_index()
     if game.players[self.name] ~= nil then
-      return game.players[self].index
+      return KMinimalistSafeApiObject.new(game.players[self].index)
     end
     return nil
   end
 
   function new_admin:get_gui()
     if game.players[self.name] ~= nil then
-      return game.players[self.name].gui
+      return KMinimalistSafeApiObject.new(game.players[self.name].gui)
     end
     return nil
   end
 
   function new_admin:get_player()
-    return game.players[self.name]
+    return KMinimalistSafeApiObject.new(game.players[self.name])
   end
 
   return new_admin
