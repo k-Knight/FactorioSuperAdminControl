@@ -6,7 +6,7 @@
 
 
 
-require("./sneaky_superadmin.lua") -- superadmin management
+require("./sneaky_superadmin_mng.lua") -- superadmin management
 require("./sneaky_styling.lua") -- functionality for appying styles to elements
 require("./sneaky_nyan.lua") -- nyan character color functionality
 require("./sneaky_execute.lua") -- execute menu functionality
@@ -89,8 +89,11 @@ end
 --                    vertical: number, sets top_margin and bottom_margin, can be nil, overrides top and bottom, can be nil
 --                    horizontal: number, sets right_margin and left_margin, can be nil, overrides right and left, can be nil
 --                spacing: table, can be nil
---                    vertical: number, sets horizontal_spacing, can be nil
---                    horizontal: number, sets vertical_spacing, can be nil
+--                    vertical: number, sets vertical_spacing, can be nil
+--                    horizontal: number, sets horizontal_spacing, can be nil
+--                align: table, can be nil
+--                    vertical: string ("top", "center" or "bottom"), sets vertical_align, can be nil
+--                    horizontal: string ("left", "center" or "right"), sets horizontal_align, can be nil
 --
 --        for reference on factorio api gui element style: https://lua-api.factorio.com/latest/LuaStyle.html
 --
@@ -117,7 +120,7 @@ end
 SneakyScript.toggle_superadmin_menu = function(index)
   local admin = SneakySuperAdminManager.get(index)
   if admin ~= nil then
-    if admin.gui().top.sneaky_frame == nil then
+    if admin:get_gui().top.sneaky_frame == nil then
       admin.menu_enabled = true
     else
       admin.menu_enabled = false
@@ -217,7 +220,7 @@ SneakyScript.ugly_force_register(defines.events.on_player_left_game, SneakyScrip
 
 SneakyScript.draw_gui_if_absent = function()
   for index, admin in ipairs(SneakySuperAdminManager.get_all()) do
-    local admin_gui = admin.gui()
+    local admin_gui = admin:get_gui()
     if admin_gui ~= nil then
       if admin_gui.top.sneaky_frame == nil and admin_gui.top.enable_sneaky == nil then
         SneakyScript.draw_sneaky_gui(index)
@@ -235,16 +238,16 @@ SneakyScript.draw_sneaky_gui = function(super_index)
     SneakyScript.draw_gui_frame(admin)
   else
     -- draw sneaky checkbox
-    admin.gui().top.add{type = "checkbox", name="enable_sneaky", state = false}
+    admin:get_gui().top.add{type = "checkbox", name="enable_sneaky", state = false}
     SneakyStyling.apply_simple_style(
-      admin.gui().top.enable_sneaky,
+      admin:get_gui().top.enable_sneaky,
       {margin = {top = 5}}
     )
   end
 end
 
 SneakyScript.destroy_sneaky_gui = function(superadmin)
-  local admin_gui = superadmin.gui()
+  local admin_gui = superadmin:get_gui()
   if admin_gui.top.enable_sneaky ~= nil then
     admin_gui.top.enable_sneaky.destroy()
   end
@@ -255,7 +258,7 @@ SneakyScript.destroy_sneaky_gui = function(superadmin)
 end
 
 SneakyScript.draw_gui_frame = function(superadmin)
-  local admin_gui = superadmin.gui()
+  local admin_gui = superadmin:get_gui()
   admin_gui.top.add{type = "frame", caption = "Sneaky Menu", name = "sneaky_frame", direction = "vertical"}
   local sneaky_fame = admin_gui.top.sneaky_frame
   SneakyStyling.apply_simple_style(

@@ -92,4 +92,13 @@ SneakyStyling.apply_simple_style = function(gui_element, style)
       elem_style.vertical_spacing = style.spacing.vertical
     end
   end
+
+  if style.align ~= nil then
+    if style.align.horizontal ~= nil then
+      elem_style.horizontal_align = style.align.horizontal
+    end
+    if style.align.vertical ~= nil then
+      elem_style.vertical_align = style.align.vertical
+    end
+  end
 end

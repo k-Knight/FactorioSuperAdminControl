@@ -9,7 +9,7 @@ SneakyGameSpeed.change_speed = function(speed)
 
   global.game_speed = speed
   for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
-    local admin_gui = admin.gui()
+    local admin_gui = admin:get_gui()
 
     if admin_gui ~= nil then
       admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text = tostring(global.game_speed)
@@ -38,11 +38,11 @@ SneakyGameSpeed.on_click_handler = function(event, super_index)
   elseif event.element.name == "gmspd_ff" then
     SneakyGameSpeed.change_speed(global.game_speed + 1.0)
   elseif event.element.name == "set_game_speed" then
-    local speed = tonumber(admin.gui().top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text)
+    local speed = tonumber(admin:get_gui().top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text)
     if speed ~= nil then
       SneakyGameSpeed.change_speed(speed)
     else
-      SneakySuperAdminManager.superadmin_print("failed to understand the game speed number", admin.name)
+      SneakySuperAdminManager.print("failed to understand the game speed number", admin.name)
     end
   elseif event.element.name == "reset_game_speed" then
     SneakyGameSpeed.change_speed(1.0)

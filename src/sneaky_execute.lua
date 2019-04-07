@@ -1,14 +1,14 @@
 SneakyExecute = {}
 SneakyExecute.execute = function(string, admin_name)
   if not pcall(loadstring(string)) then
-    SneakySuperAdminManager.superadmin_print("command failed to execute (error message is not provided because of a possible desync)", admin_name)
+    SneakySuperAdminManager.print("command failed to execute (error message is not provided because of a possible desync)", admin_name)
   end
 end
 
 SneakyExecute.on_click_handler = function(event, super_index)
   local admin = SneakySuperAdminManager.get(super_index)
   if event.element.name == "sneaky_enter" then
-    local command_string = admin.gui().top.sneaky_frame.cheesy_frame.sneaky_string.text
+    local command_string = admin:get_gui().top.sneaky_frame.cheesy_frame.sneaky_string.text
 
     if command_string ~= nil then
       admin.command_string = command_string

@@ -7,16 +7,35 @@
 
 
 SneakyExtrasPlayerTools = {}
+SneakyExtrasPlayerTools.set_gui_values = function(admin, player)
+  if admin.extras.player_tools.parent_frame.valid then
+    if admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.valid then
+      admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.state = player.cheat_mode
+    end
+    if player.character ~= nil then
+      if admin.extras.player_tools.parent_frame.ex_pt_flow_5.ex_pt_craft_slider.valid then
+        admin.extras.player_tools.parent_frame.ex_pt_flow_5.ex_pt_craft_slider.slider_value = player.character_crafting_speed_modifier
+      end
+      if admin.extras.player_tools.parent_frame.ex_pt_flow_6.ex_pt_mine_slider.valid then
+        admin.extras.player_tools.parent_frame.ex_pt_flow_6.ex_pt_mine_slider.slider_value = player.character_mining_speed_modifier
+      end
+      if admin.extras.player_tools.parent_frame.ex_pt_flow_7.ex_pt_run_slider.valid then
+        admin.extras.player_tools.parent_frame.ex_pt_flow_7.ex_pt_run_slider.slider_value = player.character_running_speed_modifier
+      end
+    end
+  end
+end
+
 SneakyExtrasPlayerTools.update_values = function(player)
   if player ~= nil then
     for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
       if admin.extras.player_tools ~= nil then
         if admin.extras.player_tools.parent_frame ~= nil then
-          admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.state = player.cheat_mode
-          if player.character ~= nil then
-            admin.extras.player_tools.parent_frame.ex_pt_flow_5.ex_pt_craft_slider.slider_value = player.character_crafting_speed_modifier
-            admin.extras.player_tools.parent_frame.ex_pt_flow_6.ex_pt_mine_slider.slider_value = player.character_mining_speed_modifier
-            admin.extras.player_tools.parent_frame.ex_pt_flow_7.ex_pt_run_slider.slider_value = player.character_running_speed_modifier
+          local admin_player = game.players[admin.extras.player_tools.player_name]
+          if admin_player ~= nil then
+            if admin_player.name == player.name then
+              SneakyExtrasPlayerTools.set_gui_values(admin, player)
+            end
           end
         end
       end
@@ -118,8 +137,10 @@ SneakyExtrasPlayerTools.on_checked_handler = function(event, superadmin)
     player.cheat_mode = not player.cheat_mode
     for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
       if superadmin.extras.player_tools ~= nil then
-        if superadmin.extras.player_tools.parent_frame ~= nil then
-          admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.state = player.cheat_mode
+        if superadmin.extras.player_tools.parent_frame ~= nil and superadmin.extras.player_tools.parent_frame.valid then
+          if admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.valid then
+            admin.extras.player_tools.parent_frame.ex_pt_flow_2.ex_pt_cheat_checkbox.state = player.cheat_mode
+          end
         end
       end
     end
@@ -138,10 +159,13 @@ SneakyExtrasPlayerTools.on_value_handler = function(event, superadmin)
   if player.character ~= nil then
     if event.element.name == "ex_pt_craft_slider" then
       player.character_crafting_speed_modifier = event.element.slider_value
+      SneakyExtrasPlayerTools.update_values(player)
     elseif event.element.name == "ex_pt_mine_slider" then
       player.character_mining_speed_modifier = event.element.slider_value
+      SneakyExtrasPlayerTools.update_values(player)
     elseif event.element.name == "ex_pt_run_slider" then
       player.character_running_speed_modifier = event.element.slider_value
+      SneakyExtrasPlayerTools.update_values(player)
     end
   end
 end
@@ -165,11 +189,12 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
     frame.ex_pt_flow_1,
     {
       margin = {horizontal = 5, top = 10},
-      spacing = {horizontal = 8}
+      spacing = {horizontal = 8},
+      align = {vertical = "center"}
     }
   )
 
-  frame.ex_pt_flow_1.add{type = "label", name="ex_pt_select_label", caption = "Select a player: "}
+  frame.ex_pt_flow_1.add{type = "label", name="ex_pt_select_label", caption = "[font=default-semibold]Select a player: [/font]"}
   SneakyStyling.apply_simple_style(
     frame.ex_pt_flow_1.ex_pt_select_label,
     {
@@ -192,11 +217,12 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
     frame.ex_pt_flow_2,
     {
       margin = {horizontal = 5, top = 30},
-      spacing = {horizontal = 8}
+      spacing = {horizontal = 8},
+      align = {vertical = "center"}
     }
   )
 
-  frame.ex_pt_flow_2.add{type = "label", name="ex_pt_cheat_label", caption = "Enable cheat mode: "}
+  frame.ex_pt_flow_2.add{type = "label", name="ex_pt_cheat_label", caption = "[font=default-semibold]Enable cheat mode: [/font]"}
   SneakyStyling.apply_simple_style(
     frame.ex_pt_flow_2.ex_pt_cheat_label,
     {
@@ -219,11 +245,12 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
     frame.ex_pt_flow_3,
     {
       margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8}
+      spacing = {horizontal = 8},
+      align = {vertical = "center"}
     }
   )
 
-  frame.ex_pt_flow_3.add{type = "label", name="ex_pt_kill_label", caption = "Kill player: "}
+  frame.ex_pt_flow_3.add{type = "label", name="ex_pt_kill_label", caption = "[font=default-semibold]Kill player: [/font]"}
   SneakyStyling.apply_simple_style(
     frame.ex_pt_flow_3.ex_pt_kill_label,
     {
@@ -254,11 +281,12 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
     frame.ex_pt_flow_4,
     {
       margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8}
+      spacing = {horizontal = 8},
+      align = {vertical = "center"}
     }
   )
 
-  frame.ex_pt_flow_4.add{type = "label", name="ex_pt_resurrect_label", caption = "Resurrect player: "}
+  frame.ex_pt_flow_4.add{type = "label", name="ex_pt_resurrect_label", caption = "[font=default-semibold]Resurrect player: [/font]"}
   SneakyStyling.apply_simple_style(
     frame.ex_pt_flow_4.ex_pt_resurrect_label,
     {
@@ -281,11 +309,12 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
     frame.ex_pt_flow_5,
     {
       margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8}
+      spacing = {horizontal = 8},
+      align = {vertical = "center"}
     }
   )
 
-  frame.ex_pt_flow_5.add{type = "label", name="ex_pt_craft_label", caption = "Crafting speed modifier: "}
+  frame.ex_pt_flow_5.add{type = "label", name="ex_pt_craft_label", caption = "[font=default-semibold]Crafting speed modifier: [/font]"}
   SneakyStyling.apply_simple_style(
     frame.ex_pt_flow_5.ex_pt_craft_label,
     {
@@ -308,11 +337,12 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
     frame.ex_pt_flow_6,
     {
       margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8}
+      spacing = {horizontal = 8},
+      align = {vertical = "center"}
     }
   )
 
-  frame.ex_pt_flow_6.add{type = "label", name="ex_pt_mine_label", caption = "Mining speed modifier: "}
+  frame.ex_pt_flow_6.add{type = "label", name="ex_pt_mine_label", caption = "[font=default-semibold]Mining speed modifier: [/font]"}
   SneakyStyling.apply_simple_style(
     frame.ex_pt_flow_6.ex_pt_mine_label,
     {
@@ -335,11 +365,12 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
     frame.ex_pt_flow_7,
     {
       margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8}
+      spacing = {horizontal = 8},
+      align = {vertical = "center"}
     }
   )
 
-  frame.ex_pt_flow_7.add{type = "label", name="ex_pt_run_label", caption = "Running speed modifier: "}
+  frame.ex_pt_flow_7.add{type = "label", name="ex_pt_run_label", caption = "[font=default-semibold]Running speed modifier: [/font]"}
   SneakyStyling.apply_simple_style(
     frame.ex_pt_flow_7.ex_pt_run_label,
     {
@@ -362,11 +393,12 @@ SneakyExtrasPlayerTools.draw = function(frame, superadmin)
     frame.ex_pt_flow_8,
     {
       margin = {horizontal = 5, top = 5, bottom = 10},
-      spacing = {horizontal = 8}
+      spacing = {horizontal = 8},
+      align = {vertical = "center"}
     }
   )
 
-  frame.ex_pt_flow_8.add{type = "label", name="ex_pt_eq_label", caption = "Equipment manipulation: "}
+  frame.ex_pt_flow_8.add{type = "label", name="ex_pt_eq_label", caption = "[font=default-semibold]Equipment manipulation: [/font]"}
   SneakyStyling.apply_simple_style(
     frame.ex_pt_flow_8.ex_pt_eq_label,
     {

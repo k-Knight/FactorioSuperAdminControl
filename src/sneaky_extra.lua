@@ -11,7 +11,7 @@ require("./sneaky_extra_player_tools.lua") -- [extra module]: Player Tools
 
 -- function for registerig default functionality (included in gui)
 SneakyExtra = {}
-SneakyExtra.run_registrations = function()
+SneakyExtra.run_registrations = function(admin)
   SneakyExtra.register_functionality(
     "admin_tools",
     "Admin Tools",
@@ -19,7 +19,8 @@ SneakyExtra.run_registrations = function()
     {
       on_click = SneakyExtrasAdminTools.on_click_handler,
       on_selected = SneakyExtrasAdminTools.on_select_handler
-    }
+    },
+    admin
   )
   SneakyExtra.register_functionality(
     "player_tools",
@@ -30,7 +31,8 @@ SneakyExtra.run_registrations = function()
       on_selected = SneakyExtrasPlayerTools.on_select_handler,
       on_checked = SneakyExtrasPlayerTools.on_checked_handler,
       on_value = SneakyExtrasPlayerTools.on_value_handler
-    }
+    },
+    admin
   )
 end
 
@@ -55,7 +57,7 @@ SneakyExtra.on_gui_click_handler = function(event, super_index)
     SneakyExtra.close_additional_menu(admin)
   end
 
-  local admin_gui = admin.gui()
+  local admin_gui = admin:get_gui()
 
   if admin_gui.center.extras_menu == nil then
     return
@@ -85,6 +87,9 @@ SneakyExtra.on_gui_click_handler = function(event, super_index)
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.click_handler ~= nil then
+      if not event.element.valid then
+        return
+      end
       functionality.click_handler(event, admin)
     end
   end
@@ -93,12 +98,15 @@ end
 SneakyExtra.on_gui_checked_state_changed_handler = function(event, super_index)
   local admin = SneakySuperAdminManager.get(super_index)
 
-  if admin.gui().center.extras_menu == nil then
+  if admin:get_gui().center.extras_menu == nil then
     return
   end
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.checkbox_handler ~= nil then
+      if not event.element.valid then
+        return
+      end
       functionality.checkbox_handler(event, admin)
     end
   end
@@ -107,12 +115,15 @@ end
 SneakyExtra.on_gui_selection_state_changed_handler = function(event, super_index)
   local admin = SneakySuperAdminManager.get(super_index)
 
-  if admin.gui().center.extras_menu == nil then
+  if admin:get_gui().center.extras_menu == nil then
     return
   end
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.select_handler ~= nil then
+      if not event.element.valid then
+        return
+      end
       functionality.select_handler(event, admin)
     end
   end
@@ -121,12 +132,15 @@ end
 SneakyExtra.on_gui_value_changed_handler = function(event, super_index)
   local admin = SneakySuperAdminManager.get(super_index)
 
-  if admin.gui().center.extras_menu == nil then
+  if admin:get_gui().center.extras_menu == nil then
     return
   end
 
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.slider_handler ~= nil then
+      if not event.element.valid then
+        return
+      end
       functionality.slider_handler(event, admin)
     end
   end
@@ -211,14 +225,14 @@ end
 
 SneakyExtra.open_additional_menu = function(superadmin)
   superadmin.additional_menu_opened = true
-  superadmin.gui().top.sneaky_frame.sneaky_extras_btn.caption = "Close Extras"
+  superadmin:get_gui().top.sneaky_frame.sneaky_extras_btn.caption = "Close Extras"
 
   SneakyExtra.draw_menu(superadmin)
 end
 
 SneakyExtra.close_additional_menu = function(superadmin)
   superadmin.additional_menu_opened = false
-  local admin_gui = superadmin.gui()
+  local admin_gui = superadmin:get_gui()
 
   admin_gui.top.sneaky_frame.sneaky_extras_btn.caption = "Open Extras"
 
@@ -228,7 +242,7 @@ SneakyExtra.close_additional_menu = function(superadmin)
 end
 
 SneakyExtra.add_btn_to_panel = function(btn_name, superadmin)
-  local admin_gui = superadmin.gui()
+  local admin_gui = superadmin:get_gui()
 
   admin_gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel.add{type = "button", name = btn_name.internal, caption = btn_name.caption, mouse_button_filter = {"left"}}
   SneakyStyling.apply_simple_style(
@@ -241,8 +255,7 @@ SneakyExtra.add_btn_to_panel = function(btn_name, superadmin)
 end
 
 SneakyExtra.draw_menu = function(superadmin)
-  SneakyExtra.run_registrations()
-  local gui_frame = superadmin.gui().center
+  local gui_frame = superadmin:get_gui().center
 
   gui_frame.add{type = "frame", caption = "Extra Functionality Menu", name = "extras_menu", direction = "vertical"}
   SneakyStyling.apply_simple_style(
