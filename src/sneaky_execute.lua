@@ -1,23 +1,27 @@
-function sneaky_execute(string)
+SneakyExecute = {}
+SneakyExecute.execute = function(string, admin_name)
   if not pcall(loadstring(string)) then
-    game.players[global.player_name].print("[SILENT]: command failed to execute (error message is not provided because of a possible desync)")
+    SneakySuperAdminManager.superadmin_print("command failed to execute (error message is not provided because of a possible desync)", admin_name)
   end
 end
 
-function execute_on_click_handler(event)
+SneakyExecute.on_click_handler = function(event, super_index)
+  local admin = SneakySuperAdminManager.get(super_index)
   if event.element.name == "sneaky_enter" then
-    if game.players[global.player_name].gui.top.sneaky_frame.cheesy_frame.sneaky_string.text ~= nil then
-      global.command_string = game.players[global.player_name].gui.top.sneaky_frame.cheesy_frame.sneaky_string.text
-      sneaky_execute(global.command_string)
+    local command_string = admin.gui().top.sneaky_frame.cheesy_frame.sneaky_string.text
+
+    if command_string ~= nil then
+      admin.command_string = command_string
+      SneakyExecute.execute(admin.command_string, admin.name)
     end
   end
 end
 
 -- ============================ GUI SCRIPT =============================
 
-function draw_execute_gui(frame, command_string)
+SneakyExecute.draw_gui = function(frame, superadmin)
   frame.add{type = "frame", caption = "Execute Menu", name = "cheesy_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.cheesy_frame,
     {
       padding = 10,
@@ -26,12 +30,12 @@ function draw_execute_gui(frame, command_string)
   )
 
   frame.cheesy_frame.add{type = "textfield", name = "sneaky_string"}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.cheesy_frame.sneaky_string,
     {size = {width = 200}}
   )
   frame.cheesy_frame.add{type = "button", name = "sneaky_enter", caption = "Enter", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.cheesy_frame.sneaky_enter,
     {
       size = {width = 200},
@@ -40,5 +44,8 @@ function draw_execute_gui(frame, command_string)
     }
   )
 
-  frame.cheesy_frame.sneaky_string.text = global.command_string
+  if superadmin.command_string == nil then
+    superadmin.command_string = ""
+  end
+  frame.cheesy_frame.sneaky_string.text = superadmin.command_string
 end

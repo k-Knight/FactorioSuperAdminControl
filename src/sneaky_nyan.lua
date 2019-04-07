@@ -1,4 +1,6 @@
-function get_blank_color_history()
+SneakyNyan = {}
+
+SneakyNyan.get_blank_color_history = function()
   local table = {}
 
   table.r = 0
@@ -10,7 +12,7 @@ function get_blank_color_history()
   return table
 end
 
-function end_nyan(name)
+SneakyNyan.end_nyan = function(name)
   local color_record = global.nyan[tostring(name)]
   color_record.enabled = false
 
@@ -19,7 +21,7 @@ function end_nyan(name)
   end
 end
 
-function start_nyan(name)
+SneakyNyan.start_nyan = function(name)
   local player = game.players[name]
 
   if player ~= nil then
@@ -37,7 +39,7 @@ function start_nyan(name)
   end
 end
 
-function HUEtoRGB(hue)
+SneakyNyan.HUEtoRGB = function(hue)
   color = {r = 0, g = 0, b = 0}
 
   if hue < 0 or hue > 360 then
@@ -77,21 +79,45 @@ function HUEtoRGB(hue)
   return color
 end
 
-function nyan_on_click_handler(event)
+SneakyNyan.on_tick_handler = function(event)
+  local color = SneakyNyan.HUEtoRGB((game.tick % 180) * 2)
+
+  for index, player in pairs(game.players) do
+    if global.nyan[tostring(player.name)] == nil then
+      global.nyan[tostring(player.name)] = SneakyNyan.get_blank_color_history()
+    end
+    if global.nyan[tostring(player.name)].enabled == true then
+      player.color = {r = color.r, g = color.g, b = color.b, a = 0.9}
+    end
+  end
+end
+
+SneakyNyan.on_player_left_game_handler = function(event)
+  SneakyNyan.end_nyan(game.players[event.player_index].name)
+end
+
+SneakyNyan.on_gui_selection_state_changed_handler = function(event, super_index)
+  if (event.element.name == "nyan_player_drop_down") then
+    SneakySuperAdminManager.get(super_index).nyan_player_name = event.element.items[event.element.selected_index]
+  end
+end
+
+SneakyNyan.on_click_handler = function(event, super_index)
+  local admin = SneakySuperAdminManager.get(super_index)
   -- start nyan
   if event.element.name == "start_nyan" then
-    start_nyan(global.nyan.player_name)
+    SneakyNyan.start_nyan(admin.nyan_player_name)
   -- end nyan
   elseif event.element.name == "end_nyan" then
-    end_nyan(global.nyan.player_name)
+    SneakyNyan.end_nyan(admin.nyan_player_name)
   end
 end
 
 -- ============================ GUI SCRIPT =============================
 
-function draw_nyan_gui(frame)
+SneakyNyan.draw_gui = function(frame, superadmin)
   frame.add{type = "frame", caption = "Rainbow Color", name = "nyan_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.nyan_frame,
     {
       padding = 10,
@@ -102,21 +128,21 @@ function draw_nyan_gui(frame)
   frame.nyan_frame.add{type = "table", name = "nyan_table1", column_count = 1}
   frame.nyan_frame.nyan_table1.add{type = "table", name = "nyan_table1_1", column_count = 1}
   frame.nyan_frame.nyan_table1.add{type = "table", name = "nyan_table1_2", column_count = 2}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.nyan_frame.nyan_table1.nyan_table1_2,
     {margin = {top = 5}}
   )
 
-  local players_names = get_player_names()
+  local players_names = SneakyScript.get_player_names()
   frame.nyan_frame.nyan_table1.nyan_table1_1.add{type = "drop-down", name = "nyan_player_drop_down", selected_index = 1, items = players_names}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.nyan_frame.nyan_table1.nyan_table1_1.nyan_player_drop_down,
     {size = {width = 203}}
   )
-  global.nyan.player_name = players_names[1]
+  superadmin.nyan_player_name = players_names[1]
 
   frame.nyan_frame.nyan_table1.nyan_table1_2.add{type = "button", name="start_nyan", caption = "Start", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.nyan_frame.nyan_table1.nyan_table1_2.start_nyan,
     {
       size = {width = 95},
@@ -124,7 +150,7 @@ function draw_nyan_gui(frame)
     }
   )
   frame.nyan_frame.nyan_table1.nyan_table1_2.add{type = "button", name="end_nyan", caption = "Stop", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.nyan_frame.nyan_table1.nyan_table1_2.end_nyan,
     {size = {width = 95}}
   )

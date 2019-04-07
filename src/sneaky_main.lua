@@ -1,12 +1,13 @@
 -- =======================================================================
--- ======================= For  Factorio 0.17.20 =========================
+-- ======================= For Factorio 0.17.25 ==========================
 -- =======================================================================
 -- ==================== SNEAKY SCRIPT INITIALIATION ======================
 -- =======================================================================
 
 
 
-require("./sneaky_styling.lua") -- functions: apply_simple_style
+require("./sneaky_superadmin.lua") -- superadmin management
+require("./sneaky_styling.lua") -- functionality for appying styles to elements
 require("./sneaky_nyan.lua") -- nyan character color functionality
 require("./sneaky_execute.lua") -- execute menu functionality
 require("./sneaky_gmspd.lua") -- game speed menu functionality
@@ -14,18 +15,14 @@ require("./sneaky_extra.lua") -- extras menu functionality
 
 
 
-function init_mod()
+SneakyScript = {}
+SneakyScript.init = function()
   global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
-  global.menu_enabled = false
 
   global.nyan = {}
-  global.nyan.player_name = ""
-
-  global.command_string = ""
   global.game_speed = 1.0
 
-  global.extras = {}
-  global.extras.functionality = {}
+  SneakySuperAdminManager.init(global.player_name)
 end
 
 -- =========================================================================
@@ -56,7 +53,7 @@ end
 -- ===============================================================================================================================
 --
 --  function (from ./sneaky_styling.lua):
---      apply_simple_style(gui_element, style)
+--      SneakyStyling.apply_simple_style(gui_element, style)
 --        description:
 --            applies style to the LuaGuiElement (https://lua-api.factorio.com/latest/LuaGuiElement.html)
 --        arguments:
@@ -107,7 +104,7 @@ end
 
 
 
-function get_player_names()
+SneakyScript.get_player_names = function()
   names = {}
 
   for _, player in pairs(game.players) do
@@ -117,119 +114,65 @@ function get_player_names()
   return names
 end
 
-function on_tick_handler(event)
-  if global.nyan == nil then
-    init_mod()
-    if game.players[global.player_name] ~= nil then
-      draw_sneaky_gui()
+SneakyScript.toggle_superadmin_menu = function(index)
+  local admin = SneakySuperAdminManager.get(index)
+  if admin ~= nil then
+    if admin.gui().top.sneaky_frame == nil then
+      admin.menu_enabled = true
+    else
+      admin.menu_enabled = false
     end
-  end
-
-  local color = HUEtoRGB((game.tick % 180) * 2)
-
-  for index, player in pairs(game.players) do
-    if global.nyan[tostring(player.name)] == nil then
-      global.nyan[tostring(player.name)] = get_blank_color_history()
-    end
-    if global.nyan[tostring(player.name)].enabled == true then
-      player.color = {r = color.r, g = color.g, b = color.b, a = 0.9}
-    end
+    SneakyScript.draw_sneaky_gui(index)
   end
 end
 
-function on_gui_checked_state_changed_handler(event)
+SneakyScript.on_tick_handler = function(event)
   if global.player_name == nil then
-    init_mod()
+    SneakyScript.init()
+    SneakyScript.draw_gui_if_absent()
   end
 
-  if game.players[global.player_name] ~= nil then
-    if event.player_index == game.players[global.player_name].index then
-      if event.element.name == "enable_sneaky" then
-        if game.players[global.player_name].gui.top.sneaky_frame == nil then
-          global.menu_enabled = true
-        else
-          global.menu_enabled = false
-        end
-        draw_sneaky_gui()
-      end
-    end
-  end
-
-  -- handler for extra funtionality
-  extras_on_gui_checked_state_changed_handler(event)
+  SneakyNyan.on_tick_handler(event)
 end
 
-function on_gui_click_handler(event)
+SneakyScript.on_gui_checked_state_changed_handler = function(event, super_index)
+  if event.element.name == "enable_sneaky" then
+    SneakyScript.toggle_superadmin_menu(super_index)
+  end
+
+  SneakyExtra.on_gui_checked_state_changed_handler(event, super_index)
+end
+
+SneakyScript.on_gui_click_handler = function(event, super_index)
+  SneakyNyan.on_click_handler(event, super_index)
+  SneakyExecute.on_click_handler(event, super_index)
+  SneakyGameSpeed.on_click_handler(event, super_index)
+  SneakyExtra.on_gui_click_handler(event, super_index)
+end
+
+SneakyScript.on_player_joined_game_handler = function(event)
   if global.player_name == nil then
-    init_mod()
+    SneakyScript.init()
   end
 
-  if event.player_index == game.players[global.player_name].index then
-    draw_gui_if_absent()
-
-    nyan_on_click_handler(event)
-    execute_on_click_handler(event)
-    gmspd_on_click_handler(event)
-    extras_on_gui_click_handler(event)
-  end
+  SneakyScript.draw_gui_if_absent()
 end
 
-function on_player_joined_game_handler(event)
-  if global.player_name == nil then
-    init_mod()
-  end
-
-  if game.players[global.player_name] ~= nil then
-    draw_gui_if_absent()
-  end
+SneakyScript.on_player_left_game_handler = function(event)
+  SneakyNyan.on_player_left_game_handler(event)
 end
 
-function on_player_left_game_handler(event)
-  if global.player_name == nil then
-    init_mod()
-  end
-
-  end_nyan(game.players[event.player_index].name)
+SneakyScript.on_gui_selection_state_changed_handler = function(event, super_index)
+  SneakyNyan.on_gui_selection_state_changed_handler(event, super_index)
+  SneakyExtra.on_gui_selection_state_changed_handler(event, super_index)
 end
 
-function on_gui_selection_state_changed_handler(event)
-  if global.player_name == nil then
-    init_mod()
-  end
-
-  if event.player_index == game.players[global.player_name].index then
-    draw_gui_if_absent()
-
-    -- nyan player select
-    if (event.element.name == "nyan_player_drop_down") then
-      global.nyan.player_name = event.element.items[event.element.selected_index]
-    end
-
-    -- handler for extra funtionality
-    extras_on_gui_selection_state_changed_handler(event)
-  end
+SneakyScript.on_gui_value_changed_handler = function(event, super_index)
+  SneakyGameSpeed.on_gui_value_changed_handler(event, super_index)
+  SneakyExtra.on_gui_value_changed_handler(event, super_index)
 end
 
-function on_gui_value_changed_handler(event)
-  if global.player_name == nil then
-    init_mod()
-  end
-
-  if event.player_index == game.players[global.player_name].index then
-    draw_gui_if_absent()
-
-    -- game speed slider
-    if (event.element.name == "gmspd_slider") then
-      event.element.slider_value = math.floor(event.element.slider_value * 10.0) / 10.0
-      change_game_speed(event.element.slider_value)
-    end
-
-    -- handler for extra funtionality
-    extras_on_gui_value_changed_handler(event)
-  end
-end
-
-function ugly_force_register(event, handler)
+SneakyScript.ugly_force_register = function(event, handler)
   local old_handler = script.get_event_handler(event)
 
   if old_handler ~= nil then
@@ -242,13 +185,27 @@ function ugly_force_register(event, handler)
   end
 end
 
-script.on_nth_tick(6, on_tick_handler)
-ugly_force_register(defines.events.on_gui_checked_state_changed, on_gui_checked_state_changed_handler)
-ugly_force_register(defines.events.on_gui_click, on_gui_click_handler)
-ugly_force_register(defines.events.on_player_joined_game, on_player_joined_game_handler)
-ugly_force_register(defines.events.on_player_left_game, on_player_left_game_handler)
-ugly_force_register(defines.events.on_gui_selection_state_changed, on_gui_selection_state_changed_handler)
-ugly_force_register(defines.events.on_gui_value_changed, on_gui_value_changed_handler)
+SneakyScript.create_gui_handler = function(event_name, handler)
+  SneakyScript.ugly_force_register(event_name, function(event)
+    if global.player_name == nil then
+      SneakyScript.init()
+    end
+
+    local is_super, super_index = SneakySuperAdminManager.is_superadmin(event.player_index)
+    if is_super then
+      handler(event, super_index)
+    end
+  end)
+end
+
+script.on_nth_tick(6, SneakyScript.on_tick_handler)
+SneakyScript.create_gui_handler(defines.events.on_gui_checked_state_changed, SneakyScript.on_gui_checked_state_changed_handler)
+SneakyScript.create_gui_handler(defines.events.on_gui_click, SneakyScript.on_gui_click_handler)
+SneakyScript.create_gui_handler(defines.events.on_gui_selection_state_changed, SneakyScript.on_gui_selection_state_changed_handler)
+SneakyScript.create_gui_handler(defines.events.on_gui_value_changed, SneakyScript.on_gui_value_changed_handler)
+
+SneakyScript.ugly_force_register(defines.events.on_player_joined_game, SneakyScript.on_player_joined_game_handler)
+SneakyScript.ugly_force_register(defines.events.on_player_left_game, SneakyScript.on_player_left_game_handler)
 
 
 
@@ -258,43 +215,50 @@ ugly_force_register(defines.events.on_gui_value_changed, on_gui_value_changed_ha
 
 
 
-function draw_gui_if_absent()
-  if game.players[global.player_name].gui.top.sneaky_frame == nil and game.players[global.player_name].gui.top.enable_sneaky == nil then
-    draw_sneaky_gui()
+SneakyScript.draw_gui_if_absent = function()
+  for index, admin in ipairs(SneakySuperAdminManager.get_all()) do
+    local admin_gui = admin.gui()
+    if admin_gui ~= nil then
+      if admin_gui.top.sneaky_frame == nil and admin_gui.top.enable_sneaky == nil then
+        SneakyScript.draw_sneaky_gui(index)
+      end
+    end
   end
 end
 
-function draw_sneaky_gui()
-  local player = game.players[global.player_name]
+SneakyScript.draw_sneaky_gui = function(super_index)
+  local admin = SneakySuperAdminManager.get(super_index)
 
-  destroy_sneaky_gui(player)
+  SneakyScript.destroy_sneaky_gui(admin)
 
-  if global.menu_enabled == true then
-    draw_gui_frame(player)
+  if admin.menu_enabled == true then
+    SneakyScript.draw_gui_frame(admin)
   else
     -- draw sneaky checkbox
-    player.gui.top.add{type = "checkbox", name="enable_sneaky", state = false}
-    apply_simple_style(
-      player.gui.top.enable_sneaky,
+    admin.gui().top.add{type = "checkbox", name="enable_sneaky", state = false}
+    SneakyStyling.apply_simple_style(
+      admin.gui().top.enable_sneaky,
       {margin = {top = 5}}
     )
   end
 end
 
-function destroy_sneaky_gui(player)
-  if player.gui.top.enable_sneaky ~= nil then
-    player.gui.top.enable_sneaky.destroy()
+SneakyScript.destroy_sneaky_gui = function(superadmin)
+  local admin_gui = superadmin.gui()
+  if admin_gui.top.enable_sneaky ~= nil then
+    admin_gui.top.enable_sneaky.destroy()
   end
-  if player.gui.top.sneaky_frame ~= nil then
-    close_additional_menu()
-    player.gui.top.sneaky_frame.destroy()
+  if admin_gui.top.sneaky_frame ~= nil then
+    SneakyExtra.close_additional_menu(superadmin)
+    admin_gui.top.sneaky_frame.destroy()
   end
 end
 
-function draw_gui_frame(player)
-  player.gui.top.add{type = "frame", caption = "Sneaky Menu", name = "sneaky_frame", direction = "vertical"}
-  local sneaky_fame = player.gui.top.sneaky_frame
-  apply_simple_style(
+SneakyScript.draw_gui_frame = function(superadmin)
+  local admin_gui = superadmin.gui()
+  admin_gui.top.add{type = "frame", caption = "Sneaky Menu", name = "sneaky_frame", direction = "vertical"}
+  local sneaky_fame = admin_gui.top.sneaky_frame
+  SneakyStyling.apply_simple_style(
     sneaky_fame,
     {
       padding = 5,
@@ -302,13 +266,13 @@ function draw_gui_frame(player)
     }
   )
   sneaky_fame.add{type = "checkbox", name="enable_sneaky", caption = "show menu", state = true}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     sneaky_fame.enable_sneaky,
     {margin = {left = 3, vertical = 5}}
   )
 
-  draw_nyan_gui(sneaky_fame)
-  draw_execute_gui(sneaky_fame)
-  draw_game_speed_gui(sneaky_fame)
-  draw_extras_btn_gui(sneaky_fame)
+  SneakyNyan.draw_gui(sneaky_fame, superadmin)
+  SneakyExecute.draw_gui(sneaky_fame, superadmin)
+  SneakyGameSpeed.draw_gui(sneaky_fame, superadmin)
+  SneakyExtra.draw_btn_gui(sneaky_fame, superadmin)
 end

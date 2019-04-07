@@ -10,25 +10,26 @@ require("./sneaky_extra_player_tools.lua") -- [extra module]: Player Tools
 
 
 -- function for registerig default functionality (included in gui)
-function run_registrations()
-  register_extra_functionality(
+SneakyExtra = {}
+SneakyExtra.run_registrations = function()
+  SneakyExtra.register_functionality(
     "admin_tools",
     "Admin Tools",
-    extras_admin_tools_draw,
+    SneakyExtrasAdminTools.draw,
     {
-      on_click = extras_admin_tools_on_click_handler,
-      on_selected = extras_admin_tools_on_select_handler
+      on_click = SneakyExtrasAdminTools.on_click_handler,
+      on_selected = SneakyExtrasAdminTools.on_select_handler
     }
   )
-  register_extra_functionality(
+  SneakyExtra.register_functionality(
     "player_tools",
     "Player Tools",
-    extras_player_tools_draw,
+    SneakyExtrasPlayerTools.draw,
     {
-      on_click = extras_player_tools_on_click_handler,
-      on_selected = extras_player_tools_on_select_handler,
-      on_checked = extras_player_tools_on_checked_handler,
-      on_value = extras_player_tools_on_value_handler
+      on_click = SneakyExtrasPlayerTools.on_click_handler,
+      on_selected = SneakyExtrasPlayerTools.on_select_handler,
+      on_checked = SneakyExtrasPlayerTools.on_checked_handler,
+      on_value = SneakyExtrasPlayerTools.on_value_handler
     }
   )
 end
@@ -41,29 +42,33 @@ end
 
 
 
-function extras_on_gui_click_handler(event)
+SneakyExtra.on_gui_click_handler = function(event, super_index)
+  local admin = SneakySuperAdminManager.get(super_index)
+
   if event.element.name == "sneaky_extras_btn" then
-    if global.additional_menu_opened == true then
-      close_additional_menu()
+    if admin.additional_menu_opened == true then
+      SneakyExtra.close_additional_menu(admin)
     else
-      open_additional_menu()
+      SneakyExtra.open_additional_menu(admin)
     end
   elseif event.element.name == "extras_close_menu" then
-    close_additional_menu()
+    SneakyExtra.close_additional_menu(admin)
   end
 
-  if game.players[global.player_name].gui.center.extras_menu == nil then
+  local admin_gui = admin.gui()
+
+  if admin_gui.center.extras_menu == nil then
     return
   end
 
-  for _, functionality in pairs(global.extras.functionality) do
+  for _, functionality in pairs(admin.extras.functionality) do
     if functionality.btn_name.internal == event.element.name then
-      if game.players[global.player_name].gui.center.extras_menu.extras_wrapper ~= nil then
-        game.players[global.player_name].gui.center.extras_menu.extras_wrapper.destroy()
+      if admin_gui.center.extras_menu.extras_wrapper ~= nil then
+        admin_gui.center.extras_menu.extras_wrapper.destroy()
       end
-      game.players[global.player_name].gui.center.extras_menu.add{type = "frame", caption = functionality.btn_name.caption, name = "extras_wrapper", direction = "vertical", style = "inside_deep_frame_for_tabs"}
-      apply_simple_style(
-        game.players[global.player_name].gui.center.extras_menu.extras_wrapper,
+      admin_gui.center.extras_menu.add{type = "frame", caption = functionality.btn_name.caption, name = "extras_wrapper", direction = "vertical", style = "inside_deep_frame_for_tabs"}
+      SneakyStyling.apply_simple_style(
+        admin_gui.center.extras_menu.extras_wrapper,
         {
           size = {width = 772},
           padding = {horizontal = 10},
@@ -74,76 +79,70 @@ function extras_on_gui_click_handler(event)
         btn.enabled = true
       end
       event.element.enabled = false
-      functionality.draw_function(game.players[global.player_name].gui.center.extras_menu.extras_wrapper)
+      functionality.draw_function(admin_gui.center.extras_menu.extras_wrapper, admin)
     end
   end
 
-  for _, functionality in pairs(global.extras.functionality) do
+  for _, functionality in pairs(admin.extras.functionality) do
     if functionality.click_handler ~= nil then
-      functionality.click_handler(event)
+      functionality.click_handler(event, admin)
     end
   end
 end
 
-function extras_on_gui_checked_state_changed_handler(event)
-  if game.players[global.player_name].gui.center.extras_menu == nil then
+SneakyExtra.on_gui_checked_state_changed_handler = function(event, super_index)
+  local admin = SneakySuperAdminManager.get(super_index)
+
+  if admin.gui().center.extras_menu == nil then
     return
   end
 
-  for _, functionality in pairs(global.extras.functionality) do
+  for _, functionality in pairs(admin.extras.functionality) do
     if functionality.checkbox_handler ~= nil then
-      functionality.checkbox_handler(event)
+      functionality.checkbox_handler(event, admin)
     end
   end
 end
 
-function extras_on_gui_selection_state_changed_handler(event)
-  if game.players[global.player_name].gui.center.extras_menu == nil then
+SneakyExtra.on_gui_selection_state_changed_handler = function(event, super_index)
+  local admin = SneakySuperAdminManager.get(super_index)
+
+  if admin.gui().center.extras_menu == nil then
     return
   end
 
-  for _, functionality in pairs(global.extras.functionality) do
+  for _, functionality in pairs(admin.extras.functionality) do
     if functionality.select_handler ~= nil then
-      functionality.select_handler(event)
+      functionality.select_handler(event, admin)
     end
   end
 end
 
-function extras_on_gui_value_changed_handler(event)
-  if game.players[global.player_name].gui.center.extras_menu == nil then
+SneakyExtra.on_gui_value_changed_handler = function(event, super_index)
+  local admin = SneakySuperAdminManager.get(super_index)
+
+  if admin.gui().center.extras_menu == nil then
     return
   end
 
-  for _, functionality in pairs(global.extras.functionality) do
+  for _, functionality in pairs(admin.extras.functionality) do
     if functionality.slider_handler ~= nil then
-      functionality.slider_handler(event)
+      functionality.slider_handler(event, admin)
     end
   end
 end
 
-function register_extra_functionality(name, button_caption, draw_function, handlers)
-  if global.player_name == nil then
-    init_mod()
-  end
-
-  if type(button_caption) ~= "string" or type(draw_function) ~= "function" then
-    game.players[global.player_name].print("[SILENT]: failed to register extra functionality")
-    return false
-  end
-
-  if global.extras == nil or global.extras.functionality == nil then
-    init_mod()
-  end
-  for _, functionality in pairs(global.extras.functionality) do
+SneakyExtra.add_functionality = function(name, button_caption, draw_function, handlers, admin)
+  for _, functionality in pairs(admin.extras.functionality) do
     if functionality.name == name then
       return false
     end
   end
 
-  global.extras.functionality[#global.extras.functionality + 1] = {}
+  admin.extras.functionality[#admin.extras.functionality + 1] = {}
 
   local internal_btn_name = "extras_btn_" .. name
-  local functionality = global.extras.functionality[#global.extras.functionality]
+  local functionality = admin.extras.functionality[#admin.extras.functionality]
   functionality.name = name
   functionality.btn_name = {internal = internal_btn_name, caption = button_caption}
   functionality.draw_function = draw_function
@@ -166,15 +165,24 @@ function register_extra_functionality(name, button_caption, draw_function, handl
   return true
 end
 
-function add_extra_btn_to_panel(btn_name)
-  game.players[global.player_name].gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel.add{type = "button", name = btn_name.internal, caption = btn_name.caption, mouse_button_filter = {"left"}}
-  apply_simple_style(
-    game.players[global.player_name].gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel[btn_name.internal],
-    {
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+SneakyExtra.register_functionality = function(name, button_caption, draw_function, handlers, admin)
+  if global.player_name == nil then
+    init_mod()
+  end
+
+  if type(button_caption) ~= "string" or type(draw_function) ~= "function" then
+    return false
+  end
+
+  if admin == nil then
+    local result = false
+    for _, superadmin in ipairs(SneakySuperAdminManager.get_all()) do
+      result = result or SneakyExtra.add_functionality(name, button_caption, draw_function, handlers, superadmin)
+    end
+    return result
+  else
+    return SneakyExtra.add_functionality(name, button_caption, draw_function, handlers, admin)
+  end
 end
 
 
@@ -183,14 +191,16 @@ end
 -- ========================= EXTRAS GUI SCRIPT ==========================
 -- =======================================================================
 
-function draw_extras_btn_gui(frame)
+
+
+SneakyExtra.draw_btn_gui = function(frame, superadmin)
   local extras_cation = "Open Extras"
-  if global.additional_menu_opened == true then
+  if superadmin.additional_menu_opened == true then
     extras_cation = "Close Extras"
   end
 
   frame.add{type = "button", name = "sneaky_extras_btn", caption = extras_cation, mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.sneaky_extras_btn,
     {
       size = {width = 200},
@@ -199,28 +209,43 @@ function draw_extras_btn_gui(frame)
   )
 end
 
-function open_additional_menu()
-  global.additional_menu_opened = true
-  game.players[global.player_name].gui.top.sneaky_frame.sneaky_extras_btn.caption = "Close Extras"
+SneakyExtra.open_additional_menu = function(superadmin)
+  superadmin.additional_menu_opened = true
+  superadmin.gui().top.sneaky_frame.sneaky_extras_btn.caption = "Close Extras"
 
-  draw_additional_menu()
+  SneakyExtra.draw_menu(superadmin)
 end
 
-function close_additional_menu()
-  global.additional_menu_opened = false
-  game.players[global.player_name].gui.top.sneaky_frame.sneaky_extras_btn.caption = "Open Extras"
+SneakyExtra.close_additional_menu = function(superadmin)
+  superadmin.additional_menu_opened = false
+  local admin_gui = superadmin.gui()
 
-  if game.players[global.player_name].gui.center.extras_menu ~= nil then
-    game.players[global.player_name].gui.center.extras_menu.destroy()
+  admin_gui.top.sneaky_frame.sneaky_extras_btn.caption = "Open Extras"
+
+  if admin_gui.center.extras_menu ~= nil then
+    admin_gui.center.extras_menu.destroy()
   end
 end
 
-function draw_additional_menu()
-  run_registrations()
-  local gui_frame = game.players[global.player_name].gui.center
+SneakyExtra.add_btn_to_panel = function(btn_name, superadmin)
+  local admin_gui = superadmin.gui()
+
+  admin_gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel.add{type = "button", name = btn_name.internal, caption = btn_name.caption, mouse_button_filter = {"left"}}
+  SneakyStyling.apply_simple_style(
+    admin_gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel[btn_name.internal],
+    {
+      padding = {horizontal = 2},
+      margin = {horizontal = 0}
+    }
+  )
+end
+
+SneakyExtra.draw_menu = function(superadmin)
+  SneakyExtra.run_registrations()
+  local gui_frame = superadmin.gui().center
 
   gui_frame.add{type = "frame", caption = "Extra Functionality Menu", name = "extras_menu", direction = "vertical"}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     gui_frame.extras_menu,
     {
       size = {width = 800},
@@ -230,7 +255,7 @@ function draw_additional_menu()
   )
 
   gui_frame.extras_menu.add{type = "table", name = "extra_buttons_table", column_count = 2}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     gui_frame.extras_menu.extra_buttons_table,
     {
       size = {width = 782},
@@ -241,7 +266,7 @@ function draw_additional_menu()
 
   -- empty elements of the table
   gui_frame.extras_menu.extra_buttons_table.add{type = "frame", name = "extra_buttons_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame,
     {
       size = {width = 674},
@@ -250,7 +275,7 @@ function draw_additional_menu()
     }
   )
   gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame.add{type = "flow", name = "extra_buttons_panel", direction = "horizontal"}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel,
     {
       size = {width = 663},
@@ -262,7 +287,7 @@ function draw_additional_menu()
 
   -- close button for the frame
   gui_frame.extras_menu.extra_buttons_table.add{type = "button", name = "extras_close_menu", caption = "Close menu", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     gui_frame.extras_menu.extra_buttons_table.extras_close_menu,
     {
       size = {width = 90},
@@ -272,7 +297,7 @@ function draw_additional_menu()
   )
 
   -- add all registered buttons
-  for _, functionality in pairs (global.extras.functionality) do
-    add_extra_btn_to_panel(functionality.btn_name)
+  for _, functionality in pairs (superadmin.extras.functionality) do
+    SneakyExtra.add_btn_to_panel(functionality.btn_name, superadmin)
   end
 end

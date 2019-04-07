@@ -1,4 +1,5 @@
-function change_game_speed(speed)
+SneakyGameSpeed = {}
+SneakyGameSpeed.change_speed = function(speed)
   if speed < 0.0167 then
     speed = 0.0167
   end
@@ -7,46 +8,61 @@ function change_game_speed(speed)
   end
 
   global.game_speed = speed
-  game.players[global.player_name].gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text = tostring(global.game_speed)
-  game.players[global.player_name].gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_slider.slider_value = global.game_speed
+  for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
+    local admin_gui = admin.gui()
+
+    if admin_gui ~= nil then
+      admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text = tostring(global.game_speed)
+      admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_slider.slider_value = global.game_speed
+    end
+  end
   game.speed = global.game_speed
 end
 
-function gmspd_on_click_handler(event)
+SneakyGameSpeed.on_gui_value_changed_handler = function(event, super_index)
+  if (event.element.name == "gmspd_slider") then
+    event.element.slider_value = math.floor(event.element.slider_value * 10.0) / 10.0
+    SneakyGameSpeed.change_speed(event.element.slider_value)
+  end
+end
+
+SneakyGameSpeed.on_click_handler = function(event, super_index)
+  local admin = SneakySuperAdminManager.get(super_index)
+
   if event.element.name == "gmspd_ss" then
-    change_game_speed(global.game_speed - 1.0)
+    SneakyGameSpeed.change_speed(global.game_speed - 1.0)
   elseif event.element.name == "gmspd_s" then
-    change_game_speed(global.game_speed - 0.1)
+    SneakyGameSpeed.change_speed(global.game_speed - 0.1)
   elseif event.element.name == "gmspd_f" then
-    change_game_speed(global.game_speed + 0.1)
+    SneakyGameSpeed.change_speed(global.game_speed + 0.1)
   elseif event.element.name == "gmspd_ff" then
-    change_game_speed(global.game_speed + 1.0)
+    SneakyGameSpeed.change_speed(global.game_speed + 1.0)
   elseif event.element.name == "set_game_speed" then
-    local speed = tonumber(game.players[global.player_name].gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text)
+    local speed = tonumber(admin.gui().top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text)
     if speed ~= nil then
-      change_game_speed(speed)
+      SneakyGameSpeed.change_speed(speed)
     else
-      game.players[global.player_name].print("[SILENT]: failed to understand the number")
+      SneakySuperAdminManager.superadmin_print("failed to understand the game speed number", admin.name)
     end
   elseif event.element.name == "reset_game_speed" then
-    change_game_speed(1.0)
+    SneakyGameSpeed.change_speed(1.0)
   end
 end
 
 -- ============================ GUI SCRIPT =============================
 
-function draw_game_speed_gui(frame)
+SneakyGameSpeed.draw_gui = function(frame, superadmin)
   global.game_speed = game.speed
 
   frame.add{type = "frame", caption = "Game Speed", name = "game_speed_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame,
     {padding = 10}
   )
   frame.game_speed_frame.add{type = "table", name = "gmspd_table1", column_count = 1}
   frame.game_speed_frame.gmspd_table1.add{type = "table", name = "gmspd_table1_1", column_count = 5}
   frame.game_speed_frame.gmspd_table1.add{type = "slider", name = "gmspd_slider", minimum_value = 0.1, maximum_value = 10, value = global.game_speed}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_slider,
     {
       size = {width = 203},
@@ -54,13 +70,13 @@ function draw_game_speed_gui(frame)
     }
   )
   frame.game_speed_frame.gmspd_table1.add{type = "table", name = "gmspd_table1_2", column_count = 2}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_2,
     {margin = {top = 5}}
   )
 
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "button", name = "gmspd_ss", caption = "<<", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.gmspd_ss,
     {
       size = {width = 30},
@@ -68,7 +84,7 @@ function draw_game_speed_gui(frame)
     }
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "button", name = "gmspd_s", caption = "<", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.gmspd_s,
     {
       size = {width = 25},
@@ -76,12 +92,12 @@ function draw_game_speed_gui(frame)
     }
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "textfield", name = "game_speed_field", text = tostring(global.game_speed)}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field,
     {size = {width = 77}}
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "button", name = "gmspd_f", caption = ">", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.gmspd_f,
     {
       size = {width = 25},
@@ -89,7 +105,7 @@ function draw_game_speed_gui(frame)
     }
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "button", name = "gmspd_ff", caption = ">>", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.gmspd_ff,
     {
       size = {width = 30},
@@ -98,7 +114,7 @@ function draw_game_speed_gui(frame)
   )
 
   frame.game_speed_frame.gmspd_table1.gmspd_table1_2.add{type = "button", name="set_game_speed", caption = "Set", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_2.set_game_speed,
     {
       size = {width = 95},
@@ -106,7 +122,7 @@ function draw_game_speed_gui(frame)
     }
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_2.add{type = "button", name="reset_game_speed", caption = "Reset", mouse_button_filter = {"left"}}
-  apply_simple_style(
+  SneakyStyling.apply_simple_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_2.reset_game_speed,
     {size ={width = 95}}
   )

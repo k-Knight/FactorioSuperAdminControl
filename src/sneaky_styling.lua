@@ -1,4 +1,5 @@
-function apply_simple_style(gui_element, style)
+SneakyStyling = {}
+SneakyStyling.apply_simple_style = function(gui_element, style)
   local elem_style = gui_element.style
 
 
