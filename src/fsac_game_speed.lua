@@ -11,8 +11,8 @@ FSACGameSpeed.change_speed = function(speed)
   for _, admin in ipairs(FSACSuperAdminManager.get_all()) do
     local admin_gui = admin:get_gui()
 
-    admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text = tostring(global.game_speed)
-    admin_gui.top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_slider.slider_value = global.game_speed
+    admin_gui.top.fsac_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text = tostring(global.game_speed)
+    admin_gui.top.fsac_frame.game_speed_frame.gmspd_table1.gmspd_slider.slider_value = global.game_speed
   end
   game.speed = global.game_speed
 end
@@ -36,7 +36,7 @@ FSACGameSpeed.on_click_handler = function(event, super_index)
   elseif event.element.name == "gmspd_ff" then
     FSACGameSpeed.change_speed(global.game_speed + 1.0)
   elseif event.element.name == "set_game_speed" then
-    local speed = tonumber(admin:get_gui().top.sneaky_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text)
+    local speed = tonumber(admin:get_gui().top.fsac_frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field.text)
     if speed ~= nil then
       FSACGameSpeed.change_speed(speed)
     else

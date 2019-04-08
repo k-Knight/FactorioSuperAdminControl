@@ -1,7 +1,7 @@
 -- =======================================================================
 -- ======================= For Factorio 0.17.25 ==========================
 -- =======================================================================
--- ==================== SNEAKY SCRIPT INITIALIATION ======================
+-- ===================== FSAC SCRIPT INITIALIATION =======================
 -- =======================================================================
 
 
@@ -36,11 +36,11 @@ end
 --
 -- ===============================================================================================================================
 --
---  function (from ./sneaky_extra.lua):
+--  function (from ./fsac_extra.lua):
 --      FSACExtra.register_extra_functionality(button_caption, draw_function, handlers)
 --
 --        description:
---            adds additional functionality to the sneaky script
+--            adds additional functionality to the FSAC script
 --        arguments:
 --            button_caption: the name of the button (that is displayed to the user)
 --            draw_function: draw function of your functionality
@@ -55,7 +55,7 @@ end
 --
 -- ===============================================================================================================================
 --
---  function (from ./sneaky_styling.lua):
+--  function (from ./kminimalist_styling.lua):
 --      KMinimalistStyling.apply_style(gui_element, style)
 --        description:
 --            applies style to the LuaGuiElement (https://lua-api.factorio.com/latest/LuaGuiElement.html)
@@ -105,7 +105,7 @@ end
 
 
 -- =======================================================================
--- =========================== SNEAKY SCRIPT =============================
+-- ============================ FSAC SCRIPT ==============================
 -- =======================================================================
 
 
@@ -123,12 +123,12 @@ end
 FSACMainScript.toggle_superadmin_menu = function(index)
   local admin = FSACSuperAdminManager.get(index)
   if admin ~= nil then
-    if admin:get_gui().top.sneaky_frame.is_nil then
+    if admin:get_gui().top.fsac_frame.is_nil then
       admin.menu_enabled = true
     else
       admin.menu_enabled = false
     end
-    FSACMainScript.draw_sneaky_gui(index)
+    FSACMainScript.draw_fsac_gui(index)
   end
 end
 
@@ -142,7 +142,7 @@ FSACMainScript.on_tick_handler = function(event)
 end
 
 FSACMainScript.on_gui_checked_state_changed_handler = function(event, super_index)
-  if event.element.name == "enable_sneaky" then
+  if event.element.name == "enable_fsac" then
     FSACMainScript.toggle_superadmin_menu(super_index)
   end
 
@@ -165,7 +165,7 @@ FSACMainScript.on_player_joined_game_handler = function(event)
   if is_super then
     local admin = FSACSuperAdminManager.get(super_index)
     admin.menu_enabled = false
-    FSACMainScript.destroy_sneaky_gui(admin)
+    FSACMainScript.destroy_fsac_gui(admin)
   end
   FSACMainScript.draw_gui_if_absent()
 end
@@ -222,7 +222,7 @@ KMinimalistBootstrap.register(defines.events.on_player_left_game, FSACMainScript
 
 
 -- =======================================================================
--- ========================= SNEAKY GIU SCRIPT ===========================
+-- ========================== FSAC GIU SCRIPT ============================
 -- =======================================================================
 
 
@@ -230,56 +230,55 @@ KMinimalistBootstrap.register(defines.events.on_player_left_game, FSACMainScript
 FSACMainScript.draw_gui_if_absent = function()
   for index, admin in ipairs(FSACSuperAdminManager.get_all()) do
     local admin_gui = admin:get_gui()
-      if admin_gui.top.sneaky_frame.is_nil and admin_gui.top.enable_sneaky.is_nil then
-        FSACMainScript.draw_sneaky_gui(index)
+      if admin_gui.top.fsac_frame.is_nil and admin_gui.top.enable_fsac.is_nil then
+        FSACMainScript.draw_fsac_gui(index)
       end
   end
 end
 
-FSACMainScript.draw_sneaky_gui = function(super_index)
+FSACMainScript.draw_fsac_gui = function(super_index)
   local admin = FSACSuperAdminManager.get(super_index)
 
-  FSACMainScript.destroy_sneaky_gui(admin)
+  FSACMainScript.destroy_fsac_gui(admin)
 
   if admin.menu_enabled == true then
     FSACMainScript.draw_gui_frame(admin)
   else
-    -- draw sneaky checkbox
-    admin:get_gui().top.add{type = "checkbox", name="enable_sneaky", state = false}
+    admin:get_gui().top.add{type = "checkbox", name="enable_fsac", state = false}
     KMinimalistStyling.apply_style(
-      admin:get_gui().top.enable_sneaky,
+      admin:get_gui().top.enable_fsac,
       {margin = {top = 5}}
     )
   end
 end
 
-FSACMainScript.destroy_sneaky_gui = function(superadmin)
+FSACMainScript.destroy_fsac_gui = function(superadmin)
   local admin_gui = superadmin:get_gui()
 
-  admin_gui.top.enable_sneaky.destroy()
+  admin_gui.top.enable_fsac.destroy()
   FSACExtra.close_additional_menu(superadmin)
-  admin_gui.top.sneaky_frame.destroy()
+  admin_gui.top.fsac_frame.destroy()
 end
 
 FSACMainScript.draw_gui_frame = function(superadmin)
   local admin_gui = superadmin:get_gui()
-  admin_gui.top.add{type = "frame", caption = "Sneaky Menu", name = "sneaky_frame", direction = "vertical"}
-  local sneaky_fame = admin_gui.top.sneaky_frame
+  admin_gui.top.add{type = "frame", caption = "fsac Menu", name = "fsac_frame", direction = "vertical"}
+  local fsac_fame = admin_gui.top.fsac_frame
   KMinimalistStyling.apply_style(
-    sneaky_fame,
+    fsac_fame,
     {
       padding = 5,
       margin = {right = 5, left = -1, vertical = 5}
     }
   )
-  sneaky_fame.add{type = "checkbox", name="enable_sneaky", caption = "show menu", state = true}
+  fsac_fame.add{type = "checkbox", name="enable_fsac", caption = "show menu", state = true}
   KMinimalistStyling.apply_style(
-    sneaky_fame.enable_sneaky,
+    fsac_fame.enable_fsac,
     {margin = {left = 3, vertical = 5}}
   )
 
-  FSACNyan.draw_gui(sneaky_fame, superadmin)
-  FSACExecute.draw_gui(sneaky_fame, superadmin)
-  FSACGameSpeed.draw_gui(sneaky_fame, superadmin)
-  FSACExtra.draw_btn_gui(sneaky_fame, superadmin)
+  FSACNyan.draw_gui(fsac_fame, superadmin)
+  FSACExecute.draw_gui(fsac_fame, superadmin)
+  FSACGameSpeed.draw_gui(fsac_fame, superadmin)
+  FSACExtra.draw_btn_gui(fsac_fame, superadmin)
 end

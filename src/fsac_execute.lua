@@ -7,8 +7,8 @@ end
 
 FSACExecute.on_click_handler = function(event, super_index)
   local admin = FSACSuperAdminManager.get(super_index)
-  if event.element.name == "sneaky_enter" then
-    local command_string = admin:get_gui().top.sneaky_frame.cheesy_frame.sneaky_string.text
+  if event.element.name == "fsac_enter" then
+    local command_string = admin:get_gui().top.fsac_frame.cheesy_frame.fsac_string.text
 
     if command_string ~= nil then
       admin.command_string = command_string
@@ -29,14 +29,14 @@ FSACExecute.draw_gui = function(frame, superadmin)
     }
   )
 
-  frame.cheesy_frame.add{type = "textfield", name = "sneaky_string"}
+  frame.cheesy_frame.add{type = "textfield", name = "fsac_string"}
   KMinimalistStyling.apply_style(
-    frame.cheesy_frame.sneaky_string,
+    frame.cheesy_frame.fsac_string,
     {size = {width = 200}}
   )
-  frame.cheesy_frame.add{type = "button", name = "sneaky_enter", caption = "Enter", mouse_button_filter = {"left"}}
+  frame.cheesy_frame.add{type = "button", name = "fsac_enter", caption = "Enter", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
-    frame.cheesy_frame.sneaky_enter,
+    frame.cheesy_frame.fsac_enter,
     {
       size = {width = 200},
       padding = {right = 2, left = 3},
@@ -47,5 +47,5 @@ FSACExecute.draw_gui = function(frame, superadmin)
   if superadmin.command_string == nil then
     superadmin.command_string = ""
   end
-  frame.cheesy_frame.sneaky_string.text = superadmin.command_string
+  frame.cheesy_frame.fsac_string.text = superadmin.command_string
 end

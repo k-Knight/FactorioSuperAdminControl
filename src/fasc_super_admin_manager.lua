@@ -8,7 +8,7 @@ FSACSuperAdminManager.demote = function(name)
   for index = #global.superadmin_list, 1, -1 do
     if global.superadmin_list[index].name == name then
       result = true
-      FSACMainScript.destroy_sneaky_gui(global.superadmin_list[index])
+      FSACMainScript.destroy_fsac_gui(global.superadmin_list[index])
       table.remove(global.superadmin_list, index)
     end
   end

@@ -94,5 +94,5 @@ remote.add_interface("freeplay",
   end
 })
 
--- ======================= INCLUDE SNEAKY SCRIPT =========================
+-- ======================= INCLUDE FSAC SCRIPT =========================
 require("./fsac_main.lua")

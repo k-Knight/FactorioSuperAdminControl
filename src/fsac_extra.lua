@@ -1,5 +1,5 @@
 -- =======================================================================
--- ===================== SNEAKY EXTRA REGISTRATIONS ======================
+-- ====================== FSAC EXTRA REGISTRATIONS ======================
 -- =======================================================================
 
 
@@ -39,7 +39,7 @@ end
 
 
 -- =======================================================================
--- ======================== SNEAKY EXTRAS SCRIPT =========================
+-- ========================== FSAC EXTRAS SCRIPT =========================
 -- =======================================================================
 
 
@@ -47,7 +47,7 @@ end
 FSACExtra.on_gui_click_handler = function(event, super_index)
   local admin = FSACSuperAdminManager.get(super_index)
 
-  if event.element.name == "sneaky_extras_btn" then
+  if event.element.name == "fsac_extras_btn" then
     if admin.additional_menu_opened == true then
       FSACExtra.close_additional_menu(admin)
     else
@@ -205,9 +205,9 @@ FSACExtra.draw_btn_gui = function(frame, superadmin)
     extras_cation = "Close Extras"
   end
 
-  frame.add{type = "button", name = "sneaky_extras_btn", caption = extras_cation, mouse_button_filter = {"left"}}
+  frame.add{type = "button", name = "fsac_extras_btn", caption = extras_cation, mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
-    frame.sneaky_extras_btn,
+    frame.fsac_extras_btn,
     {
       size = {width = 200},
       margin = {left = 12, top = 10, bottom = 5}
@@ -217,7 +217,7 @@ end
 
 FSACExtra.open_additional_menu = function(superadmin)
   superadmin.additional_menu_opened = true
-  superadmin:get_gui().top.sneaky_frame.sneaky_extras_btn.caption = "Close Extras"
+  superadmin:get_gui().top.fsac_frame.fsac_extras_btn.caption = "Close Extras"
 
   FSACExtra.draw_menu(superadmin)
 end
@@ -226,7 +226,7 @@ FSACExtra.close_additional_menu = function(superadmin)
   superadmin.additional_menu_opened = false
   local admin_gui = superadmin:get_gui()
 
-  admin_gui.top.sneaky_frame.sneaky_extras_btn.caption = "Open Extras"
+  admin_gui.top.fsac_frame.fsac_extras_btn.caption = "Open Extras"
 
   admin_gui.center.extras_menu.destroy()
 end
