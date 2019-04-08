@@ -21,7 +21,7 @@ FSACSuperAdmin.new = function(admin_name)
     if game.players[self.name] ~= nil then
       return KMinimalistSafeApiObject.new(game.players[self.name].gui)
     end
-    return nil
+    return KMinimalistSafeApiObject.new(nil)
   end
 
   function new_admin:get_player()
