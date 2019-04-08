@@ -95,4 +95,4 @@ remote.add_interface("freeplay",
 })
 
 -- ======================= INCLUDE SNEAKY SCRIPT =========================
-require("./sneaky_main.lua")
+require("./fsac_main.lua")

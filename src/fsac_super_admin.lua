@@ -1,6 +1,6 @@
-SneakySuperAdmin = {}
+FSACSuperAdmin = {}
 
-SneakySuperAdmin.new = function(admin_name)
+FSACSuperAdmin.new = function(admin_name)
   new_admin = {
     name = admin_name,
     menu_enabled = false,

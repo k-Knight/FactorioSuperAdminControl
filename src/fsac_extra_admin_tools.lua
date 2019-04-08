@@ -6,8 +6,8 @@
 
 
 
-SneakyExtrasAdminTools = {}
-SneakyExtrasAdminTools.on_click_handler = function(event, superadmin)
+FSACExtrasAdminTools = {}
+FSACExtrasAdminTools.on_click_handler = function(event, superadmin)
   if event.element.name == "ex_at_demote_all" then
     for _, player in pairs(game.players) do
       player.admin = false
@@ -45,7 +45,7 @@ SneakyExtrasAdminTools.on_click_handler = function(event, superadmin)
       end
 
       global.exat_permission_groups = {}
-      for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
+      for _, admin in ipairs(FSACSuperAdminManager.get_all()) do
         global.exat_permission_groups[admin.name] = admin:get_player().permission_group
         admin:get_player().permission_group = nil
       end
@@ -68,7 +68,7 @@ SneakyExtrasAdminTools.on_click_handler = function(event, superadmin)
 
       game.permissions.get_group("extras_admin_tools_supress_group").destroy()
 
-      for _, admin in ipairs(SneakySuperAdminManager.get_all()) do
+      for _, admin in ipairs(FSACSuperAdminManager.get_all()) do
         if global.exat_permission_groups[admin.name] ~= nil then
           admin:get_player().permission_group = global.exat_permission_groups[admin.name]
         end
@@ -76,7 +76,7 @@ SneakyExtrasAdminTools.on_click_handler = function(event, superadmin)
     end
   elseif event.element.name == "ex_at_kill_all_p" then
     for _, player in pairs(game.players) do
-      if not SneakySuperAdminManager.is_superadmin(player.name) then
+      if not FSACSuperAdminManager.is_superadmin(player.name) then
         if player.character ~= nil then
           player.character.die(player.force)
         end
@@ -98,23 +98,23 @@ SneakyExtrasAdminTools.on_click_handler = function(event, superadmin)
     end
   elseif event.element.name == "ex_at_super_promote" then
     if game.players[superadmin.extras.admin_tools.superadmin_name] ~= nil then
-      SneakySuperAdminManager.promote(superadmin.extras.admin_tools.superadmin_name)
+      FSACSuperAdminManager.promote(superadmin.extras.admin_tools.superadmin_name)
     end
   elseif event.element.name == "ex_at_super_demote" then
     if game.players[superadmin.extras.admin_tools.superadmin_name] ~= nil then
       if superadmin.extras.admin_tools.superadmin_name ~= global.player_name then
-        local is_admin, index = SneakySuperAdminManager.is_superadmin(superadmin.extras.admin_tools.superadmin_name)
+        local is_admin, index = FSACSuperAdminManager.is_superadmin(superadmin.extras.admin_tools.superadmin_name)
         if is_admin then
-          SneakySuperAdminManager.demote(superadmin.extras.admin_tools.superadmin_name)
+          FSACSuperAdminManager.demote(superadmin.extras.admin_tools.superadmin_name)
         end
       else
-        SneakySuperAdminManager.print("Cannot demote core SuperAdmin", superadmin.name)
+        FSACSuperAdminManager.print("Cannot demote core SuperAdmin", superadmin.name)
       end
     end
   end
 end
 
-SneakyExtrasAdminTools.on_select_handler = function(event, superadmin)
+FSACExtrasAdminTools.on_select_handler = function(event, superadmin)
   if event.element.name == "ex_at_dropdown" then
     superadmin.extras.admin_tools.player_name = event.element.items[event.element.selected_index]
   elseif event.element.name == "ex_at_dropdown_super" then
@@ -130,13 +130,13 @@ end
 
 
 
-SneakyExtrasAdminTools.draw = function(frame, superadmin)
+FSACExtrasAdminTools.draw = function(frame, superadmin)
   if superadmin.extras.admin_tools == nil then
     superadmin.extras.admin_tools = {}
   end
 
   frame.add{type = "flow", name="ex_at_flow_1", direction="horizontal"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_1,
     {
       margin = {horizontal = 5, top = 10},
@@ -145,7 +145,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
   frame.ex_at_flow_1.add{type = "label", name="ex_at_all_label", caption = "[font=default-semibold]Operations on all players:[/font]"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_1.ex_at_all_label,
     {
       size = {width = 454},
@@ -155,7 +155,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.ex_at_flow_1.add{type = "button", name="ex_at_demote_all", caption = "Demote everyone", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_1.ex_at_demote_all,
     {
       size = {width = 135},
@@ -164,7 +164,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
   frame.ex_at_flow_1.add{type = "button", name="ex_at_promote_all", caption = "Promote everyone", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_1.ex_at_promote_all,
     {
       size = {width = 135},
@@ -174,7 +174,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.add{type = "flow", name="ex_at_flow_2", direction="horizontal"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_2,
     {
       margin = {horizontal = 5, top = 5},
@@ -183,7 +183,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
   frame.ex_at_flow_2.add{type = "label", name="ex_at_label", caption = "[font=default-semibold]Individual operations: [/font]"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_2.ex_at_label,
     {
       size = {width = 246},
@@ -192,16 +192,16 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
 
-  local players_names = SneakyScript.get_player_names()
+  local players_names = FSACMainScript.get_player_names()
   frame.ex_at_flow_2.add{type = "drop-down", name = "ex_at_dropdown", selected_index = 1, items = players_names}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_2.ex_at_dropdown,
     {size = {width = 200}}
   )
   superadmin.extras.admin_tools.player_name = players_names[1]
 
   frame.ex_at_flow_2.add{type = "button", name="ex_at_promote", caption = "Promote player", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_2.ex_at_promote,
     {
       size = {width = 135},
@@ -210,7 +210,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
   frame.ex_at_flow_2.add{type = "button", name="ex_at_demote", caption = "Demote player", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_2.ex_at_demote,
     {
       size = {width = 135},
@@ -220,7 +220,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.add{type = "flow", name="ex_at_flow_3", direction="horizontal"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_3,
     {
       margin = {horizontal = 5, top = 5, bottom = 10},
@@ -229,7 +229,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
   frame.ex_at_flow_3.add{type = "label", name="ex_at_label", caption = "[font=default-semibold]Console (and chat) suppression: [/font]"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_3.ex_at_label,
     {
       size = {width = 597},
@@ -244,7 +244,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   end
 
   frame.ex_at_flow_3.add{type = "button", name = "ex_at_supress", caption = supr_caption, mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_3.ex_at_supress,
     {
       size = {width = 135},
@@ -254,7 +254,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.add{type = "flow", name="ex_at_flow_4", direction="horizontal"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_4,
     {
       margin = {horizontal = 5, top = 30},
@@ -263,7 +263,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
   frame.ex_at_flow_4.add{type = "label", name="ex_at_label", caption = "[font=default-semibold][color=255,190,75]All player manipulation:[/color][/font]"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_4.ex_at_label,
     {
       size = {width = 311},
@@ -273,7 +273,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.ex_at_flow_4.add{type = "button", name = "ex_at_kill_all_p", caption = "Kill All Players", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_4.ex_at_kill_all_p,
     {
       size = {width = 135},
@@ -283,7 +283,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.ex_at_flow_4.add{type = "button", name = "ex_at_res_all_p", caption = "Res All Players", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_4.ex_at_res_all_p,
     {
       size = {width = 135},
@@ -293,7 +293,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.ex_at_flow_4.add{type = "button", name = "ex_at_kill_all_e", caption = "Kill Nearby Enemies", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_4.ex_at_kill_all_e,
     {
       size = {width = 135},
@@ -303,7 +303,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.add{type = "flow", name="ex_at_flow_5", direction="horizontal"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_5,
     {
       margin = {horizontal = 5, top = 5, bottom = 10},
@@ -313,7 +313,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
   )
 
   frame.ex_at_flow_5.add{type = "label", name="ex_at_label", caption = "[font=default-semibold][color=255,115,75]SuperAdmin manipulation[/color][/font]"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_5.ex_at_label,
     {
       size = {width = 246},
@@ -322,16 +322,16 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
 
-  local players_names = SneakyScript.get_player_names()
+  local players_names = FSACMainScript.get_player_names()
   frame.ex_at_flow_5.add{type = "drop-down", name = "ex_at_dropdown_super", selected_index = 1, items = players_names}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_5.ex_at_dropdown_super,
     {size = {width = 200}}
   )
   superadmin.extras.admin_tools.superadmin_name = players_names[1]
 
   frame.ex_at_flow_5.add{type = "button", name="ex_at_super_promote", caption = "Promote player", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_5.ex_at_super_promote,
     {
       size = {width = 135},
@@ -340,7 +340,7 @@ SneakyExtrasAdminTools.draw = function(frame, superadmin)
     }
   )
   frame.ex_at_flow_5.add{type = "button", name="ex_at_super_demote", caption = "Demote player", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.ex_at_flow_5.ex_at_super_demote,
     {
       size = {width = 135},

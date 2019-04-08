@@ -8,24 +8,24 @@
 
 require("./kminimalist_bootstrap.lua") -- KMinimalist Bootstrap
 require("./kminimalist_safe_api_object.lua") -- KMinimalist Safe Api Object (api object proxy)
+require("./kminimalist_styling.lua") -- KMinimalist Styling (appying styles to elements)
 
-require("./sneaky_superadmin_mng.lua") -- superadmin management
-require("./sneaky_styling.lua") -- functionality for appying styles to elements
-require("./sneaky_nyan.lua") -- nyan character color functionality
-require("./sneaky_execute.lua") -- execute menu functionality
-require("./sneaky_gmspd.lua") -- game speed menu functionality
-require("./sneaky_extra.lua") -- extras menu functionality
+require("./fasc_super_admin_manager.lua") -- superadmin management
+require("./fsac_nyan.lua") -- nyan character color functionality
+require("./fsac_execute.lua") -- execute menu functionality
+require("./fsac_game_speed.lua") -- game speed menu functionality
+require("./fsac_extra.lua") -- extras menu functionality
 
 
 
-SneakyScript = {}
-SneakyScript.init = function()
+FSACMainScript = {}
+FSACMainScript.init = function()
   global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
 
   global.nyan = {}
   global.game_speed = 1.0
 
-  SneakySuperAdminManager.init(global.player_name)
+  FSACSuperAdminManager.init(global.player_name)
 end
 
 -- =========================================================================
@@ -37,7 +37,7 @@ end
 -- ===============================================================================================================================
 --
 --  function (from ./sneaky_extra.lua):
---      register_extra_functionality(button_caption, draw_function, handlers)
+--      FSACExtra.register_extra_functionality(button_caption, draw_function, handlers)
 --
 --        description:
 --            adds additional functionality to the sneaky script
@@ -56,7 +56,7 @@ end
 -- ===============================================================================================================================
 --
 --  function (from ./sneaky_styling.lua):
---      SneakyStyling.apply_simple_style(gui_element, style)
+--      KMinimalistStyling.apply_style(gui_element, style)
 --        description:
 --            applies style to the LuaGuiElement (https://lua-api.factorio.com/latest/LuaGuiElement.html)
 --        arguments:
@@ -110,7 +110,7 @@ end
 
 
 
-SneakyScript.get_player_names = function()
+FSACMainScript.get_player_names = function()
   names = {}
 
   for _, player in pairs(game.players) do
@@ -120,68 +120,68 @@ SneakyScript.get_player_names = function()
   return names
 end
 
-SneakyScript.toggle_superadmin_menu = function(index)
-  local admin = SneakySuperAdminManager.get(index)
+FSACMainScript.toggle_superadmin_menu = function(index)
+  local admin = FSACSuperAdminManager.get(index)
   if admin ~= nil then
     if admin:get_gui().top.sneaky_frame.is_nil then
       admin.menu_enabled = true
     else
       admin.menu_enabled = false
     end
-    SneakyScript.draw_sneaky_gui(index)
+    FSACMainScript.draw_sneaky_gui(index)
   end
 end
 
-SneakyScript.on_tick_handler = function(event)
+FSACMainScript.on_tick_handler = function(event)
   if global.player_name == nil then
-    SneakyScript.init()
-    SneakyScript.draw_gui_if_absent()
+    FSACMainScript.init()
+    FSACMainScript.draw_gui_if_absent()
   end
 
-  SneakyNyan.on_tick_handler(event)
+  FSACNyan.on_tick_handler(event)
 end
 
-SneakyScript.on_gui_checked_state_changed_handler = function(event, super_index)
+FSACMainScript.on_gui_checked_state_changed_handler = function(event, super_index)
   if event.element.name == "enable_sneaky" then
-    SneakyScript.toggle_superadmin_menu(super_index)
+    FSACMainScript.toggle_superadmin_menu(super_index)
   end
 
-  SneakyExtra.on_gui_checked_state_changed_handler(event, super_index)
+  FSACExtra.on_gui_checked_state_changed_handler(event, super_index)
 end
 
-SneakyScript.on_gui_click_handler = function(event, super_index)
-  SneakyNyan.on_click_handler(event, super_index)
-  SneakyExecute.on_click_handler(event, super_index)
-  SneakyGameSpeed.on_click_handler(event, super_index)
-  SneakyExtra.on_gui_click_handler(event, super_index)
+FSACMainScript.on_gui_click_handler = function(event, super_index)
+  FSACNyan.on_click_handler(event, super_index)
+  FSACExecute.on_click_handler(event, super_index)
+  FSACGameSpeed.on_click_handler(event, super_index)
+  FSACExtra.on_gui_click_handler(event, super_index)
 end
 
-SneakyScript.on_player_joined_game_handler = function(event)
+FSACMainScript.on_player_joined_game_handler = function(event)
   if global.player_name == nil then
-    SneakyScript.init()
+    FSACMainScript.init()
   end
 
-  local is_super, super_index = SneakySuperAdminManager.is_superadmin(event.player_index)
+  local is_super, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
   if is_super then
-    local admin = SneakySuperAdminManager.get(super_index)
+    local admin = FSACSuperAdminManager.get(super_index)
     admin.menu_enabled = false
-    SneakyScript.destroy_sneaky_gui(admin)
+    FSACMainScript.destroy_sneaky_gui(admin)
   end
-  SneakyScript.draw_gui_if_absent()
+  FSACMainScript.draw_gui_if_absent()
 end
 
-SneakyScript.on_player_left_game_handler = function(event)
-  SneakyNyan.on_player_left_game_handler(event)
+FSACMainScript.on_player_left_game_handler = function(event)
+  FSACNyan.on_player_left_game_handler(event)
 end
 
-SneakyScript.on_gui_selection_state_changed_handler = function(event, super_index)
-  SneakyNyan.on_gui_selection_state_changed_handler(event, super_index)
-  SneakyExtra.on_gui_selection_state_changed_handler(event, super_index)
+FSACMainScript.on_gui_selection_state_changed_handler = function(event, super_index)
+  FSACNyan.on_gui_selection_state_changed_handler(event, super_index)
+  FSACExtra.on_gui_selection_state_changed_handler(event, super_index)
 end
 
-SneakyScript.on_gui_value_changed_handler = function(event, super_index)
-  SneakyGameSpeed.on_gui_value_changed_handler(event, super_index)
-  SneakyExtra.on_gui_value_changed_handler(event, super_index)
+FSACMainScript.on_gui_value_changed_handler = function(event, super_index)
+  FSACGameSpeed.on_gui_value_changed_handler(event, super_index)
+  FSACExtra.on_gui_value_changed_handler(event, super_index)
 end
 
 KMinimalistBootstrap.register = function(event, handler)
@@ -197,27 +197,27 @@ KMinimalistBootstrap.register = function(event, handler)
   end
 end
 
-SneakyScript.create_gui_handler = function(event_name, handler)
+FSACMainScript.create_gui_handler = function(event_name, handler)
   KMinimalistBootstrap.register(event_name, function(event)
     if global.player_name == nil then
-      SneakyScript.init()
+      FSACMainScript.init()
     end
 
-    local is_super, super_index = SneakySuperAdminManager.is_superadmin(event.player_index)
+    local is_super, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
     if is_super then
       handler(KMinimalistSafeApiObject.new(event), super_index)
     end
   end)
 end
 
-script.on_nth_tick(6, SneakyScript.on_tick_handler)
-SneakyScript.create_gui_handler(defines.events.on_gui_checked_state_changed, SneakyScript.on_gui_checked_state_changed_handler)
-SneakyScript.create_gui_handler(defines.events.on_gui_click, SneakyScript.on_gui_click_handler)
-SneakyScript.create_gui_handler(defines.events.on_gui_selection_state_changed, SneakyScript.on_gui_selection_state_changed_handler)
-SneakyScript.create_gui_handler(defines.events.on_gui_value_changed, SneakyScript.on_gui_value_changed_handler)
+script.on_nth_tick(6, FSACMainScript.on_tick_handler)
+FSACMainScript.create_gui_handler(defines.events.on_gui_checked_state_changed, FSACMainScript.on_gui_checked_state_changed_handler)
+FSACMainScript.create_gui_handler(defines.events.on_gui_click, FSACMainScript.on_gui_click_handler)
+FSACMainScript.create_gui_handler(defines.events.on_gui_selection_state_changed, FSACMainScript.on_gui_selection_state_changed_handler)
+FSACMainScript.create_gui_handler(defines.events.on_gui_value_changed, FSACMainScript.on_gui_value_changed_handler)
 
-KMinimalistBootstrap.register(defines.events.on_player_joined_game, SneakyScript.on_player_joined_game_handler)
-KMinimalistBootstrap.register(defines.events.on_player_left_game, SneakyScript.on_player_left_game_handler)
+KMinimalistBootstrap.register(defines.events.on_player_joined_game, FSACMainScript.on_player_joined_game_handler)
+KMinimalistBootstrap.register(defines.events.on_player_left_game, FSACMainScript.on_player_left_game_handler)
 
 
 
@@ -227,45 +227,45 @@ KMinimalistBootstrap.register(defines.events.on_player_left_game, SneakyScript.o
 
 
 
-SneakyScript.draw_gui_if_absent = function()
-  for index, admin in ipairs(SneakySuperAdminManager.get_all()) do
+FSACMainScript.draw_gui_if_absent = function()
+  for index, admin in ipairs(FSACSuperAdminManager.get_all()) do
     local admin_gui = admin:get_gui()
       if admin_gui.top.sneaky_frame.is_nil and admin_gui.top.enable_sneaky.is_nil then
-        SneakyScript.draw_sneaky_gui(index)
+        FSACMainScript.draw_sneaky_gui(index)
       end
   end
 end
 
-SneakyScript.draw_sneaky_gui = function(super_index)
-  local admin = SneakySuperAdminManager.get(super_index)
+FSACMainScript.draw_sneaky_gui = function(super_index)
+  local admin = FSACSuperAdminManager.get(super_index)
 
-  SneakyScript.destroy_sneaky_gui(admin)
+  FSACMainScript.destroy_sneaky_gui(admin)
 
   if admin.menu_enabled == true then
-    SneakyScript.draw_gui_frame(admin)
+    FSACMainScript.draw_gui_frame(admin)
   else
     -- draw sneaky checkbox
     admin:get_gui().top.add{type = "checkbox", name="enable_sneaky", state = false}
-    SneakyStyling.apply_simple_style(
+    KMinimalistStyling.apply_style(
       admin:get_gui().top.enable_sneaky,
       {margin = {top = 5}}
     )
   end
 end
 
-SneakyScript.destroy_sneaky_gui = function(superadmin)
+FSACMainScript.destroy_sneaky_gui = function(superadmin)
   local admin_gui = superadmin:get_gui()
 
   admin_gui.top.enable_sneaky.destroy()
-  SneakyExtra.close_additional_menu(superadmin)
+  FSACExtra.close_additional_menu(superadmin)
   admin_gui.top.sneaky_frame.destroy()
 end
 
-SneakyScript.draw_gui_frame = function(superadmin)
+FSACMainScript.draw_gui_frame = function(superadmin)
   local admin_gui = superadmin:get_gui()
   admin_gui.top.add{type = "frame", caption = "Sneaky Menu", name = "sneaky_frame", direction = "vertical"}
   local sneaky_fame = admin_gui.top.sneaky_frame
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     sneaky_fame,
     {
       padding = 5,
@@ -273,13 +273,13 @@ SneakyScript.draw_gui_frame = function(superadmin)
     }
   )
   sneaky_fame.add{type = "checkbox", name="enable_sneaky", caption = "show menu", state = true}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     sneaky_fame.enable_sneaky,
     {margin = {left = 3, vertical = 5}}
   )
 
-  SneakyNyan.draw_gui(sneaky_fame, superadmin)
-  SneakyExecute.draw_gui(sneaky_fame, superadmin)
-  SneakyGameSpeed.draw_gui(sneaky_fame, superadmin)
-  SneakyExtra.draw_btn_gui(sneaky_fame, superadmin)
+  FSACNyan.draw_gui(sneaky_fame, superadmin)
+  FSACExecute.draw_gui(sneaky_fame, superadmin)
+  FSACGameSpeed.draw_gui(sneaky_fame, superadmin)
+  FSACExtra.draw_btn_gui(sneaky_fame, superadmin)
 end

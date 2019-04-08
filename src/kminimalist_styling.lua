@@ -1,5 +1,5 @@
-SneakyStyling = {}
-SneakyStyling.apply_simple_style = function(gui_element, style)
+KMinimalistStyling = {}
+KMinimalistStyling.apply_style = function(gui_element, style)
   local elem_style = gui_element.style
 
 

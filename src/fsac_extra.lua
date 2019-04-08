@@ -4,33 +4,33 @@
 
 
 
-require("./sneaky_extra_admin_tools.lua") -- [extra module]: Admin Tools
-require("./sneaky_extra_player_tools.lua") -- [extra module]: Player Tools
+require("./fsac_extra_admin_tools.lua") -- [extra module]: Admin Tools
+require("./fsac_extra_player_tools.lua") -- [extra module]: Player Tools
 
 
 
 -- function for registerig default functionality (included in gui)
-SneakyExtra = {}
-SneakyExtra.run_registrations = function(admin)
-  SneakyExtra.register_functionality(
+FSACExtra = {}
+FSACExtra.run_registrations = function(admin)
+  FSACExtra.register_functionality(
     "admin_tools",
     "Admin Tools",
-    SneakyExtrasAdminTools.draw,
+    FSACExtrasAdminTools.draw,
     {
-      on_click = SneakyExtrasAdminTools.on_click_handler,
-      on_selected = SneakyExtrasAdminTools.on_select_handler
+      on_click = FSACExtrasAdminTools.on_click_handler,
+      on_selected = FSACExtrasAdminTools.on_select_handler
     },
     admin
   )
-  SneakyExtra.register_functionality(
+  FSACExtra.register_functionality(
     "player_tools",
     "Player Tools",
-    SneakyExtrasPlayerTools.draw,
+    FSACExtraPlayerTools.draw,
     {
-      on_click = SneakyExtrasPlayerTools.on_click_handler,
-      on_selected = SneakyExtrasPlayerTools.on_select_handler,
-      on_checked = SneakyExtrasPlayerTools.on_checked_handler,
-      on_value = SneakyExtrasPlayerTools.on_value_handler
+      on_click = FSACExtraPlayerTools.on_click_handler,
+      on_selected = FSACExtraPlayerTools.on_select_handler,
+      on_checked = FSACExtraPlayerTools.on_checked_handler,
+      on_value = FSACExtraPlayerTools.on_value_handler
     },
     admin
   )
@@ -44,17 +44,17 @@ end
 
 
 
-SneakyExtra.on_gui_click_handler = function(event, super_index)
-  local admin = SneakySuperAdminManager.get(super_index)
+FSACExtra.on_gui_click_handler = function(event, super_index)
+  local admin = FSACSuperAdminManager.get(super_index)
 
   if event.element.name == "sneaky_extras_btn" then
     if admin.additional_menu_opened == true then
-      SneakyExtra.close_additional_menu(admin)
+      FSACExtra.close_additional_menu(admin)
     else
-      SneakyExtra.open_additional_menu(admin)
+      FSACExtra.open_additional_menu(admin)
     end
   elseif event.element.name == "extras_close_menu" then
-    SneakyExtra.close_additional_menu(admin)
+    FSACExtra.close_additional_menu(admin)
   end
 
   local admin_gui = admin:get_gui()
@@ -67,7 +67,7 @@ SneakyExtra.on_gui_click_handler = function(event, super_index)
     if functionality.btn_name.internal == event.element.name then
       admin_gui.center.extras_menu.extras_wrapper.destroy()
       admin_gui.center.extras_menu.add{type = "frame", caption = functionality.btn_name.caption, name = "extras_wrapper", direction = "vertical", style = "inside_deep_frame_for_tabs"}
-      SneakyStyling.apply_simple_style(
+      KMinimalistStyling.apply_style(
         admin_gui.center.extras_menu.extras_wrapper,
         {
           size = {width = 772},
@@ -92,8 +92,8 @@ SneakyExtra.on_gui_click_handler = function(event, super_index)
   end
 end
 
-SneakyExtra.on_gui_checked_state_changed_handler = function(event, super_index)
-  local admin = SneakySuperAdminManager.get(super_index)
+FSACExtra.on_gui_checked_state_changed_handler = function(event, super_index)
+  local admin = FSACSuperAdminManager.get(super_index)
 
   if admin:get_gui().center.extras_menu == nil then
     return
@@ -106,8 +106,8 @@ SneakyExtra.on_gui_checked_state_changed_handler = function(event, super_index)
   end
 end
 
-SneakyExtra.on_gui_selection_state_changed_handler = function(event, super_index)
-  local admin = SneakySuperAdminManager.get(super_index)
+FSACExtra.on_gui_selection_state_changed_handler = function(event, super_index)
+  local admin = FSACSuperAdminManager.get(super_index)
 
   if admin:get_gui().center.extras_menu == nil then
     return
@@ -120,8 +120,8 @@ SneakyExtra.on_gui_selection_state_changed_handler = function(event, super_index
   end
 end
 
-SneakyExtra.on_gui_value_changed_handler = function(event, super_index)
-  local admin = SneakySuperAdminManager.get(super_index)
+FSACExtra.on_gui_value_changed_handler = function(event, super_index)
+  local admin = FSACSuperAdminManager.get(super_index)
 
   if admin:get_gui().center.extras_menu == nil then
     return
@@ -134,7 +134,7 @@ SneakyExtra.on_gui_value_changed_handler = function(event, super_index)
   end
 end
 
-SneakyExtra.add_functionality = function(name, button_caption, draw_function, handlers, admin)
+FSACExtra.add_functionality = function(name, button_caption, draw_function, handlers, admin)
   for _, functionality in pairs(admin.extras.functionality) do
     if functionality.name == name then
       return false
@@ -167,7 +167,7 @@ SneakyExtra.add_functionality = function(name, button_caption, draw_function, ha
   return true
 end
 
-SneakyExtra.register_functionality = function(name, button_caption, draw_function, handlers, admin)
+FSACExtra.register_functionality = function(name, button_caption, draw_function, handlers, admin)
   if global.player_name == nil then
     init_mod()
   end
@@ -178,12 +178,12 @@ SneakyExtra.register_functionality = function(name, button_caption, draw_functio
 
   if admin == nil then
     local result = false
-    for _, superadmin in ipairs(SneakySuperAdminManager.get_all()) do
-      result = result or SneakyExtra.add_functionality(name, button_caption, draw_function, handlers, superadmin)
+    for _, superadmin in ipairs(FSACSuperAdminManager.get_all()) do
+      result = result or FSACExtra.add_functionality(name, button_caption, draw_function, handlers, superadmin)
     end
     return result
   else
-    return SneakyExtra.add_functionality(name, button_caption, draw_function, handlers, admin)
+    return FSACExtra.add_functionality(name, button_caption, draw_function, handlers, admin)
   end
 end
 
@@ -195,18 +195,18 @@ end
 
 
 
-SneakyExtra.get_wrapper_frame = function(superadmin)
+FSACExtra.get_wrapper_frame = function(superadmin)
   return superadmin:get_gui().center.extras_menu.extras_wrapper
 end
 
-SneakyExtra.draw_btn_gui = function(frame, superadmin)
+FSACExtra.draw_btn_gui = function(frame, superadmin)
   local extras_cation = "Open Extras"
   if superadmin.additional_menu_opened == true then
     extras_cation = "Close Extras"
   end
 
   frame.add{type = "button", name = "sneaky_extras_btn", caption = extras_cation, mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     frame.sneaky_extras_btn,
     {
       size = {width = 200},
@@ -215,14 +215,14 @@ SneakyExtra.draw_btn_gui = function(frame, superadmin)
   )
 end
 
-SneakyExtra.open_additional_menu = function(superadmin)
+FSACExtra.open_additional_menu = function(superadmin)
   superadmin.additional_menu_opened = true
   superadmin:get_gui().top.sneaky_frame.sneaky_extras_btn.caption = "Close Extras"
 
-  SneakyExtra.draw_menu(superadmin)
+  FSACExtra.draw_menu(superadmin)
 end
 
-SneakyExtra.close_additional_menu = function(superadmin)
+FSACExtra.close_additional_menu = function(superadmin)
   superadmin.additional_menu_opened = false
   local admin_gui = superadmin:get_gui()
 
@@ -231,11 +231,11 @@ SneakyExtra.close_additional_menu = function(superadmin)
   admin_gui.center.extras_menu.destroy()
 end
 
-SneakyExtra.add_btn_to_panel = function(btn_name, superadmin)
+FSACExtra.add_btn_to_panel = function(btn_name, superadmin)
   local admin_gui = superadmin:get_gui()
 
   admin_gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel.add{type = "button", name = btn_name.internal, caption = btn_name.caption, mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     admin_gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel[btn_name.internal],
     {
       padding = {horizontal = 2},
@@ -244,11 +244,11 @@ SneakyExtra.add_btn_to_panel = function(btn_name, superadmin)
   )
 end
 
-SneakyExtra.draw_menu = function(superadmin)
+FSACExtra.draw_menu = function(superadmin)
   local gui_frame = superadmin:get_gui().center
 
   gui_frame.add{type = "frame", caption = "Extra Functionality Menu", name = "extras_menu", direction = "vertical"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     gui_frame.extras_menu,
     {
       size = {width = 800},
@@ -258,7 +258,7 @@ SneakyExtra.draw_menu = function(superadmin)
   )
 
   gui_frame.extras_menu.add{type = "table", name = "extra_buttons_table", column_count = 2}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     gui_frame.extras_menu.extra_buttons_table,
     {
       size = {width = 782},
@@ -269,7 +269,7 @@ SneakyExtra.draw_menu = function(superadmin)
 
   -- empty elements of the table
   gui_frame.extras_menu.extra_buttons_table.add{type = "frame", name = "extra_buttons_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame,
     {
       size = {width = 674},
@@ -278,7 +278,7 @@ SneakyExtra.draw_menu = function(superadmin)
     }
   )
   gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame.add{type = "flow", name = "extra_buttons_panel", direction = "horizontal"}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel,
     {
       size = {width = 663},
@@ -290,7 +290,7 @@ SneakyExtra.draw_menu = function(superadmin)
 
   -- close button for the frame
   gui_frame.extras_menu.extra_buttons_table.add{type = "button", name = "extras_close_menu", caption = "Close menu", mouse_button_filter = {"left"}}
-  SneakyStyling.apply_simple_style(
+  KMinimalistStyling.apply_style(
     gui_frame.extras_menu.extra_buttons_table.extras_close_menu,
     {
       size = {width = 90},
@@ -301,6 +301,6 @@ SneakyExtra.draw_menu = function(superadmin)
 
   -- add all registered buttons
   for _, functionality in pairs (superadmin.extras.functionality) do
-    SneakyExtra.add_btn_to_panel(functionality.btn_name, superadmin)
+    FSACExtra.add_btn_to_panel(functionality.btn_name, superadmin)
   end
 end
