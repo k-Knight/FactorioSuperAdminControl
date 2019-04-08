@@ -1,4 +1,52 @@
+if global.kminimalist == nil then
+  global.kminimalist = {}
+end
+if global.kminimalist.styles == nil then
+  global.kminimalist.styles = {}
+end
+if global.kminimalist.templates == nil then
+  global.kminimalist.templates = {}
+end
+
 KMinimalistStyling = {}
+require("./kminimalist_styling_parsing.lua")
+
+KMinimalistStyling.find_style = function(name)
+  local style_index = nil
+  for index, style in pairs(global.kminimalist.styles) do
+    if style.name == name then
+      return index, style
+    end
+  end
+  return nil, nil
+end
+
+KMinimalistStyling.store_style = function(style)
+  local index = KMinimalistStyling.find_style(style.name)
+  if index ~= nil then
+    global.kminimalist.styles[index] = style
+  else
+    global.kminimalist.styles[#global.kminimalist.styles + 1] = style
+  end
+end
+
+KMinimalistStyling.define_style = function(name, style)
+  local parsed_style = KMinimalistStyling.parsing.parse_style(name, style)
+  if parsed_style == nil then
+    return false
+  end
+
+  local _, resulting_style = KMinimalistStyling.find_style(name)
+  if resulting_style ~= nil then
+    resulting_style = resulting_style:override(parsed_style)
+  else
+    resulting_style = parsed_style
+  end
+
+  KMinimalistStyling.store_style(resulting_style)
+  return true
+end
+
 KMinimalistStyling.apply_style = function(gui_element, style)
   local elem_style = gui_element.style
 

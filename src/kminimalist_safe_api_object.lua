@@ -1,3 +1,7 @@
+if global.kminimalist == nil then
+  global.kminimalist = {}
+end
+
 KMinimalistSafeApiObject = {}
 
 KMinimalistSafeApiObject.get_unsafe_obj = function(safe_obj)

@@ -1,3 +1,7 @@
+if global.kminimalist == nil then
+  global.kminimalist = {}
+end
+
 KMinimalistBootstrap = {}
 KMinimalistBootstrap.register = function(event, handler)
   local old_handler = script.get_event_handler(event)
