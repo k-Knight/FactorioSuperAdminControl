@@ -1,14 +1,14 @@
 -- =======================================================================
--- ======================= For Factorio 0.17.25 ==========================
+-- ======================= For Factorio 0.17.48 ==========================
 -- =======================================================================
 -- ===================== FSAC SCRIPT INITIALIATION =======================
 -- =======================================================================
 
 
 
-require("./kminimalist_bootstrap.lua") -- KMinimalist Bootstrap
-require("./kminimalist_safe_api_object.lua") -- KMinimalist Safe Api Object (api object proxy)
-require("./kminimalist_styling.lua") -- KMinimalist Styling (appying styles to elements)
+require("kminimalist/kminimalist_bootstrap.lua") -- KMinimalist Bootstrap
+require("kminimalist/kminimalist_safe_api_object.lua") -- KMinimalist Safe Api Object (api object proxy)
+require("kminimalist/kminimalist_styling.lua") -- KMinimalist Styling (appying styles to elements)
 
 require("./fasc_super_admin_manager.lua") -- superadmin management
 require("./fsac_nyan.lua") -- nyan character color functionality
@@ -22,7 +22,7 @@ FSACMainScript = {}
 FSACMainScript.init = function()
   KMinimalistBootstrap.init()
 
-  global.player_name = "k-Knight"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
+  global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
 
   global.nyan = {}
   global.game_speed = 1.0

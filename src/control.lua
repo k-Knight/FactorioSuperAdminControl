@@ -95,4 +95,4 @@ remote.add_interface("freeplay",
 })
 
 -- ======================= INCLUDE FSAC SCRIPT =========================
-require("./fsac_main.lua")
+require("./fsac/fsac_main.lua")
