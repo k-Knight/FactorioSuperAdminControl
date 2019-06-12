@@ -8,7 +8,6 @@ FSACSuperAdmin.new = function(admin_name)
       functionality = {}
     }
   }
-  --new_admin.__index = new_admin
 
   function new_admin:get_index()
     if game.players[self.name] ~= nil then

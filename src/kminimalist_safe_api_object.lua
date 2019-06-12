@@ -1,7 +1,3 @@
-if global.kminimalist == nil then
-  global.kminimalist = {}
-end
-
 KMinimalistSafeApiObject = {}
 
 KMinimalistSafeApiObject.get_unsafe_obj = function(safe_obj)
@@ -33,10 +29,13 @@ KMinimalistSafeApiObject.new = function(api_obj)
     local unsafe = KMinimalistSafeApiObject.get_unsafe_obj(table)
     if unsafe ~= nil then
       if unsafe.valid ~= false then
-        if unsafe[key] ~= nil and type(unsafe[key]) ~= "table" then
-          return unsafe[key]
+        local unsafe_field = nil
+        pcall(function() unsafe_field = unsafe[key] end)
+
+        if unsafe_field ~= nil and type(unsafe_field) ~= "table" then
+          return unsafe_field
         else
-          return KMinimalistSafeApiObject.new(unsafe[key])
+          return KMinimalistSafeApiObject.new(unsafe_field)
         end
       end
     end

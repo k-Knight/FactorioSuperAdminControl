@@ -24,7 +24,8 @@ KMinimalistStyling.definitions.sugar_elements = {
   {field_name = "horizontal_margin", type_name = "number"},
   {field_name = "extra_margin_when_activated", type_name = "number"},
   {field_name = "extra_vertical_margin_when_activated", type_name = "number"},
-  {field_name = "extra_horizontal_margin_when_activated", type_name = "number"}
+  {field_name = "extra_horizontal_margin_when_activated", type_name = "number"},
+  {field_name = "spacing", type_name = "number"}
 }
 
 KMinimalistStyling.definitions.simple_elements = {
@@ -69,7 +70,6 @@ KMinimalistStyling.definitions.simple_elements = {
   {field_name = "stretch_image_to_widget_size", type_name = "boolean"},
   {field_name = "use_header_filler", type_name = "boolean"},
   {field_name = "font", type_name = "string"},
-  {field_name = "spacing", type_name = "number"},
   {field_name = "horizontal_spacing", type_name = "number"},
   {field_name = "vertical_spacing", type_name = "number"},
   {field_name = "clicked_vertical_offset", type_name = "number"}

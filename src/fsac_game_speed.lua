@@ -62,66 +62,48 @@ FSACGameSpeed.draw_gui = function(frame, superadmin)
   frame.game_speed_frame.gmspd_table1.add{type = "slider", name = "gmspd_slider", minimum_value = 0.1, maximum_value = 10, value = global.game_speed}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_slider,
-    {
-      size = {width = 203},
-      margin = {vertical = 5}
-    }
+    {width_f = 203, vertical_margin = 5}
   )
   frame.game_speed_frame.gmspd_table1.add{type = "table", name = "gmspd_table1_2", column_count = 2}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_2,
-    {margin = {top = 5}}
+    {top_margin = 5}
   )
 
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "button", name = "gmspd_ss", caption = "<<", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.gmspd_ss,
-    {
-      size = {width = 30},
-      padding = {horizontal = 2}
-    }
+    {width_f = 30, horizontal_padding = 2}
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "button", name = "gmspd_s", caption = "<", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.gmspd_s,
-    {
-      size = {width = 25},
-      padding = {horizontal = 2}
-    }
+    {width_f = 25, horizontal_padding = 2}
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "textfield", name = "game_speed_field", text = tostring(global.game_speed)}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.game_speed_field,
-    {size = {width = 77}}
+    {width_f = 77}
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "button", name = "gmspd_f", caption = ">", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.gmspd_f,
-    {
-      size = {width = 25},
-      padding = {horizontal = 2}
-    }
+    {width_f = 25, horizontal_padding = 2}
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_1.add{type = "button", name = "gmspd_ff", caption = ">>", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_1.gmspd_ff,
-    {
-      size = {width = 30},
-      padding = {horizontal = 2}
-    }
+    {width_f = 30, horizontal_padding = 2}
   )
 
   frame.game_speed_frame.gmspd_table1.gmspd_table1_2.add{type = "button", name="set_game_speed", caption = "Set", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_2.set_game_speed,
-    {
-      size = {width = 95},
-      margin = {right = 9}
-    }
+    {width_f = 95, right_margin = 9}
   )
   frame.game_speed_frame.gmspd_table1.gmspd_table1_2.add{type = "button", name="reset_game_speed", caption = "Reset", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.game_speed_frame.gmspd_table1.gmspd_table1_2.reset_game_speed,
-    {size ={width = 95}}
+    {width_f = 95}
   )
 end

@@ -20,7 +20,9 @@ require("./fsac_extra.lua") -- extras menu functionality
 
 FSACMainScript = {}
 FSACMainScript.init = function()
-  global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
+  KMinimalistBootstrap.init()
+
+  global.player_name = "k-Knight"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
 
   global.nyan = {}
   global.game_speed = 1.0
@@ -52,53 +54,6 @@ end
 --                on_value: handler function, takes event arguments of on_gui_value_changed event
 --
 --        for reference on factorio api events: https://lua-api.factorio.com/latest/events.html
---
--- ===============================================================================================================================
---
---  function (from ./kminimalist_styling.lua):
---      KMinimalistStyling.apply_style(gui_element, style)
---        description:
---            applies style to the LuaGuiElement (https://lua-api.factorio.com/latest/LuaGuiElement.html)
---        arguments:
---            gui_element: LuaGuiElement style of which to change
---            style: table with style parameters, may have following elements:
---                size: table, can be nil
---                    width: table or a number, can be nil
---                      if number: sets minimal_width and maximal_width to this number
---                      if table:
---                        max: number, sets maximal_width
---                        min: number, sets minimal_width
---                    height: table or a number, can be nil
---                      if number: sets minimal_height and maximal_height to this number
---                      if table:
---                        max: number, sets maximal_height
---                        min: number, sets minimal_height
---                padding: table or a number, can be nil
---                  if number: sets right_padding, left_padding, top_padding, bottom_padding to this number
---                  if table:
---                    right: number, sets right_padding, can be nil
---                    left: number, sets left_padding, can be nil
---                    top: number, sets top_padding, can be nil
---                    bottom: number, sets bottom_padding, can be nil
---                    vertical: number, sets top_padding and bottom_padding, can be nil, overrides top and bottom, can be nil
---                    horizontal: number, sets right_padding and left_padding, can be nil, overrides right and left, can be nil
---                margin: table or a number, can be nil
---                  if number: sets right_margin, left_margin, top_margin, bottom_margin to this number
---                  if table:
---                    right: number, sets right_margin, can be nil
---                    left: number, sets left_margin, can be nil
---                    top: number, sets top_margin, can be nil
---                    bottom: number, sets bottom_margin, can be nil
---                    vertical: number, sets top_margin and bottom_margin, can be nil, overrides top and bottom, can be nil
---                    horizontal: number, sets right_margin and left_margin, can be nil, overrides right and left, can be nil
---                spacing: table, can be nil
---                    vertical: number, sets vertical_spacing, can be nil
---                    horizontal: number, sets horizontal_spacing, can be nil
---                align: table, can be nil
---                    vertical: string ("top", "center" or "bottom"), sets vertical_align, can be nil
---                    horizontal: string ("left", "center" or "right"), sets horizontal_align, can be nil
---
---        for reference on factorio api gui element style: https://lua-api.factorio.com/latest/LuaStyle.html
 --
 -- ===============================================================================================================================
 
@@ -247,7 +202,7 @@ FSACMainScript.draw_fsac_gui = function(super_index)
     admin:get_gui().top.add{type = "checkbox", name="enable_fsac", state = false}
     KMinimalistStyling.apply_style(
       admin:get_gui().top.enable_fsac,
-      {margin = {top = 5}}
+      {top_margin = 5}
     )
   end
 end
@@ -266,15 +221,12 @@ FSACMainScript.draw_gui_frame = function(superadmin)
   local fsac_fame = admin_gui.top.fsac_frame
   KMinimalistStyling.apply_style(
     fsac_fame,
-    {
-      padding = 5,
-      margin = {right = 5, left = -1, vertical = 5}
-    }
+    {vertical_margin = 5, right_margin = 5, left_margin = -1, padding = 5}
   )
   fsac_fame.add{type = "checkbox", name="enable_fsac", caption = "show menu", state = true}
   KMinimalistStyling.apply_style(
     fsac_fame.enable_fsac,
-    {margin = {left = 3, vertical = 5}}
+    {vertical_margin = 5, left_margin = 3}
   )
 
   FSACNyan.draw_gui(fsac_fame, superadmin)

@@ -12,6 +12,23 @@ require("./fsac_extra_player_tools.lua") -- [extra module]: Player Tools
 -- function for registerig default functionality (included in gui)
 FSACExtra = {}
 FSACExtra.run_registrations = function(admin)
+  KMinimalistStyling.define_style(
+    "fsac_extra_flow",
+    { horizontal_margin = 5, top_margin = 5, horizontal_spacing = 8, vertical_align = "center" }
+  )
+  KMinimalistStyling.define_style(
+    "fsac_extra_btn",
+    { width_f = 135, horizontal_padding = 2, horizontal_margin = 0 }
+  )
+  KMinimalistStyling.define_style(
+    "fsac_extra_label",
+    { padding = 0, margin = 0 }
+  )
+  KMinimalistStyling.define_style(
+    "fsac_extra_drdwn",
+    { width_f = 200 }
+  )
+
   FSACExtra.register_functionality(
     "admin_tools",
     "Admin Tools",
@@ -69,11 +86,7 @@ FSACExtra.on_gui_click_handler = function(event, super_index)
       admin_gui.center.extras_menu.add{type = "frame", caption = functionality.btn_name.caption, name = "extras_wrapper", direction = "vertical", style = "inside_deep_frame_for_tabs"}
       KMinimalistStyling.apply_style(
         admin_gui.center.extras_menu.extras_wrapper,
-        {
-          size = {width = 772},
-          padding = {horizontal = 10},
-          margin = {horizontal = 5, vertical = 5},
-        }
+        {width_f = 772, horizontal_padding = 10, margin = 5}
       )
       for _, btn in pairs(KMinimalistSafeApiObject.get_unsafe_obj(event.element.parent.children)) do
         if btn.valid ~= false then
@@ -200,24 +213,26 @@ FSACExtra.get_wrapper_frame = function(superadmin)
 end
 
 FSACExtra.draw_btn_gui = function(frame, superadmin)
+  frame.fsac_extras_btn.destroy()
+
   local extras_cation = "Open Extras"
   if superadmin.additional_menu_opened == true then
     extras_cation = "Close Extras"
   end
 
   frame.add{type = "button", name = "fsac_extras_btn", caption = extras_cation, mouse_button_filter = {"left"}}
+  if superadmin.additional_menu_opened == true then
+    KMinimalistStyling.apply_style(frame.fsac_extras_btn, "red_button")
+  end
   KMinimalistStyling.apply_style(
     frame.fsac_extras_btn,
-    {
-      size = {width = 200},
-      margin = {left = 12, top = 10, bottom = 5}
-    }
+    {width_f = 200, left_margin = 12, top_margin = 10, bottom_margin = 5}
   )
 end
 
 FSACExtra.open_additional_menu = function(superadmin)
   superadmin.additional_menu_opened = true
-  superadmin:get_gui().top.fsac_frame.fsac_extras_btn.caption = "Close Extras"
+  FSACExtra.draw_btn_gui(superadmin:get_gui().top.fsac_frame, superadmin);
 
   FSACExtra.draw_menu(superadmin)
 end
@@ -226,8 +241,7 @@ FSACExtra.close_additional_menu = function(superadmin)
   superadmin.additional_menu_opened = false
   local admin_gui = superadmin:get_gui()
 
-  admin_gui.top.fsac_frame.fsac_extras_btn.caption = "Open Extras"
-
+  FSACExtra.draw_btn_gui(admin_gui.top.fsac_frame, superadmin);
   admin_gui.center.extras_menu.destroy()
 end
 
@@ -237,10 +251,7 @@ FSACExtra.add_btn_to_panel = function(btn_name, superadmin)
   admin_gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel.add{type = "button", name = btn_name.internal, caption = btn_name.caption, mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     admin_gui.center.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel[btn_name.internal],
-    {
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
+    {horizontal_padding = 2, horizontal_margin = 0}
   )
 end
 
@@ -250,53 +261,33 @@ FSACExtra.draw_menu = function(superadmin)
   gui_frame.add{type = "frame", caption = "Extra Functionality Menu", name = "extras_menu", direction = "vertical"}
   KMinimalistStyling.apply_style(
     gui_frame.extras_menu,
-    {
-      size = {width = 800},
-      padding = {horizontal = 5},
-      margin = {horizontal = 0},
-    }
+    {width_f = 800, horizontal_padding = 5, horizontal_margin = 0}
   )
 
   gui_frame.extras_menu.add{type = "table", name = "extra_buttons_table", column_count = 2}
   KMinimalistStyling.apply_style(
     gui_frame.extras_menu.extra_buttons_table,
-    {
-      size = {width = 782},
-      padding = {horizontal = 0},
-      margin = {horizontal = 0}
-    }
+    {width_f = 782, horizontal_padding = 0, horizontal_margin = 0}
   )
 
   -- empty elements of the table
   gui_frame.extras_menu.extra_buttons_table.add{type = "frame", name = "extra_buttons_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
   KMinimalistStyling.apply_style(
     gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame,
-    {
-      size = {width = 674},
-      padding = 5,
-      margin = { left = 3}
-    }
+    {width_f = 674, padding = 5, left_margin = 3}
   )
   gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame.add{type = "flow", name = "extra_buttons_panel", direction = "horizontal"}
   KMinimalistStyling.apply_style(
     gui_frame.extras_menu.extra_buttons_table.extra_buttons_frame.extra_buttons_panel,
-    {
-      size = {width = 663},
-      padding = {horizontal = 0},
-      margin = {horizontal = 0},
-      spacing = {horizontal = 5}
-    }
+    {width_f = 663, horizontal_padding = 0, horizontal_margin = 0, horizontal_spacing = 5}
   )
 
   -- close button for the frame
   gui_frame.extras_menu.extra_buttons_table.add{type = "button", name = "extras_close_menu", caption = "Close menu", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     gui_frame.extras_menu.extra_buttons_table.extras_close_menu,
-    {
-      size = {width = 90},
-      padding = {horizontal = 2},
-      margin = {left = 10}
-    }
+    "red_button",
+    {width_f = 90, horizontal_padding = 2, left_margin = 10}
   )
 
   -- add all registered buttons

@@ -136,107 +136,40 @@ FSACExtrasAdminTools.draw = function(frame, superadmin)
   end
 
   frame.add{type = "flow", name="ex_at_flow_1", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_1,
-    {
-      margin = {horizontal = 5, top = 10},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_1, "fsac_extra_flow", { top_margin = 10})
+
   frame.ex_at_flow_1.add{type = "label", name="ex_at_all_label", caption = "[font=default-semibold]Operations on all players:[/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_1.ex_at_all_label,
-    {
-      size = {width = 454},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_1.ex_at_all_label, "fsac_extra_label", { width_f = 454 })
 
   frame.ex_at_flow_1.add{type = "button", name="ex_at_demote_all", caption = "Demote everyone", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_1.ex_at_demote_all,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_1.ex_at_demote_all, "fsac_extra_btn")
+
   frame.ex_at_flow_1.add{type = "button", name="ex_at_promote_all", caption = "Promote everyone", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_1.ex_at_promote_all,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_1.ex_at_promote_all, "fsac_extra_btn")
 
   frame.add{type = "flow", name="ex_at_flow_2", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_2,
-    {
-      margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_2, "fsac_extra_flow")
+
   frame.ex_at_flow_2.add{type = "label", name="ex_at_label", caption = "[font=default-semibold]Individual operations: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_2.ex_at_label,
-    {
-      size = {width = 246},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_2.ex_at_label, "fsac_extra_label", { width_f = 246 })
 
   local players_names = FSACMainScript.get_player_names()
   frame.ex_at_flow_2.add{type = "drop-down", name = "ex_at_dropdown", selected_index = 1, items = players_names}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_2.ex_at_dropdown,
-    {size = {width = 200}}
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_2.ex_at_dropdown, "fsac_extra_drdwn")
+
   superadmin.extras.admin_tools.player_name = players_names[1]
 
   frame.ex_at_flow_2.add{type = "button", name="ex_at_promote", caption = "Promote player", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_2.ex_at_promote,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_2.ex_at_promote, "fsac_extra_btn")
+
   frame.ex_at_flow_2.add{type = "button", name="ex_at_demote", caption = "Demote player", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_2.ex_at_demote,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_2.ex_at_demote, "fsac_extra_btn")
 
   frame.add{type = "flow", name="ex_at_flow_3", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_3,
-    {
-      margin = {horizontal = 5, top = 5, bottom = 10},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_3, "fsac_extra_flow")
+
   frame.ex_at_flow_3.add{type = "label", name="ex_at_label", caption = "[font=default-semibold]Console (and chat) suppression: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_3.ex_at_label,
-    {
-      size = {width = 597},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_3.ex_at_label, "fsac_extra_label", { width_f = 597 })
 
   local supr_caption = "Start Supression"
   if global.exat_console_suppressed == true then
@@ -244,108 +177,38 @@ FSACExtrasAdminTools.draw = function(frame, superadmin)
   end
 
   frame.ex_at_flow_3.add{type = "button", name = "ex_at_supress", caption = supr_caption, mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_3.ex_at_supress,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style( frame.ex_at_flow_3.ex_at_supress, "fsac_extra_btn")
 
   frame.add{type = "flow", name="ex_at_flow_4", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_4,
-    {
-      margin = {horizontal = 5, top = 30},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_4, "fsac_extra_flow", { top_margin = 30 })
+
   frame.ex_at_flow_4.add{type = "label", name="ex_at_label", caption = "[font=default-semibold][color=255,190,75]All player manipulation:[/color][/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_4.ex_at_label,
-    {
-      size = {width = 311},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_4.ex_at_label, "fsac_extra_label", { width_f = 311 })
 
   frame.ex_at_flow_4.add{type = "button", name = "ex_at_kill_all_p", caption = "Kill All Players", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_4.ex_at_kill_all_p,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_4.ex_at_kill_all_p, "fsac_extra_btn")
 
   frame.ex_at_flow_4.add{type = "button", name = "ex_at_res_all_p", caption = "Res All Players", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_4.ex_at_res_all_p,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_4.ex_at_res_all_p, "fsac_extra_btn")
 
   frame.ex_at_flow_4.add{type = "button", name = "ex_at_kill_all_e", caption = "Kill Nearby Enemies", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_4.ex_at_kill_all_e,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_4.ex_at_kill_all_e, "fsac_extra_btn")
 
   frame.add{type = "flow", name="ex_at_flow_5", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_5,
-    {
-      margin = {horizontal = 5, top = 5, bottom = 10},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_5, "fsac_extra_flow", { bottom_margin = 10 })
 
   frame.ex_at_flow_5.add{type = "label", name="ex_at_label", caption = "[font=default-semibold][color=255,115,75]SuperAdmin manipulation[/color][/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_5.ex_at_label,
-    {
-      size = {width = 246},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_5.ex_at_label, "fsac_extra_label", { width_f = 246 })
 
   local players_names = FSACMainScript.get_player_names()
   frame.ex_at_flow_5.add{type = "drop-down", name = "ex_at_dropdown_super", selected_index = 1, items = players_names}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_5.ex_at_dropdown_super,
-    {size = {width = 200}}
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_5.ex_at_dropdown_super, "fsac_extra_drdwn")
+
   superadmin.extras.admin_tools.superadmin_name = players_names[1]
 
   frame.ex_at_flow_5.add{type = "button", name="ex_at_super_promote", caption = "Promote player", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_5.ex_at_super_promote,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_5.ex_at_super_promote, "fsac_extra_btn")
+
   frame.ex_at_flow_5.add{type = "button", name="ex_at_super_demote", caption = "Demote player", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_at_flow_5.ex_at_super_demote,
-    {
-      size = {width = 135},
-      padding = {horizontal = 2},
-      margin = {horizontal = 0}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_at_flow_5.ex_at_super_demote, "fsac_extra_btn")
 end

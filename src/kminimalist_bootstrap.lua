@@ -1,8 +1,16 @@
-if global.kminimalist == nil then
-  global.kminimalist = {}
+KMinimalistBootstrap = {}
+KMinimalistBootstrap.init = function()
+  if global.kminimalist == nil then
+    global.kminimalist = {}
+  end
+  if global.kminimalist.styles == nil then
+    global.kminimalist.styles = {}
+  end
+  if global.kminimalist.templates == nil then
+    global.kminimalist.templates = {}
+  end
 end
 
-KMinimalistBootstrap = {}
 KMinimalistBootstrap.register = function(event, handler)
   local old_handler = script.get_event_handler(event)
 

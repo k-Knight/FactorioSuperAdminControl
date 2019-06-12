@@ -1,4 +1,5 @@
-require("./kminimalist_styling_names.lua")
+require("./kminimalist_styling_definitions.lua")
+require("./kminimalist_utility.lua")
 
 KMinimalistStyling.parsing = {}
 KMinimalistStyling.parsing.parse_complex_element = function(elem_key, elem_value)
@@ -31,7 +32,7 @@ KMinimalistStyling.parsing.parse_complex_element = function(elem_key, elem_value
   return nil
 end
 
-KMinimalistStyling.parsing.parse_sugar_element = function(elem_key)
+KMinimalistStyling.parsing.is_sugar_element = function(elem_key)
   for _, elem_def in pairs(KMinimalistStyling.definitions.sugar_elements) do
     if elem_def.field_name == elem_key then
       return true, elem_def.type_name
@@ -140,9 +141,16 @@ KMinimalistStyling.parsing.parse_sugar_element = function(elem_key, elem_value)
     element["extra_right_margin_when_activated"] = elem_value
     element["extra_left_margin_when_activated"] = elem_value
 
+  elseif elem_key == "spacing" then
+
+    element["horizontal_spacing"] = elem_value
+    element["vertical_spacing"] = elem_value
+
   else
     return nil
   end
+
+  return element
 end
 
 KMinimalistStyling.parsing.parse_style_element = function(elem_key, elem_value)
@@ -151,7 +159,7 @@ KMinimalistStyling.parsing.parse_style_element = function(elem_key, elem_value)
   else
     local is_sugar_element, elem_type = KMinimalistStyling.parsing.is_sugar_element(elem_key)
     if is_sugar_element then
-      return KMinimalistStyling.parsing.parse_complex_element(elem_key, elem_value)
+      return KMinimalistStyling.parsing.parse_sugar_element(elem_key, elem_value)
     else
       if elem_type ~= nil then
         local element = {}
@@ -169,7 +177,7 @@ KMinimalistStyling.parsing.parse_style = function(name, style)
   local parsed_style = {name = name, elements = {}}
 
   for key, value in pairs(style) do
-    local parsed_element = KMinimalistStyling.parse_style_element(key, value)
+    local parsed_element = KMinimalistStyling.parsing.parse_style_element(key, value)
     if parsed_element ~= nil then
       for key, value in pairs(parsed_element) do
         parsed_style.elements[key] = value
@@ -184,9 +192,13 @@ KMinimalistStyling.parsing.parse_style = function(name, style)
   end
 
   function parsed_style:override(style)
+    local new_style = KMinimalistUtility.deep_copy(self)
+
     for key, value in pairs(style.elements) do
-      self.elements[key] = value
+      new_style.elements[key] = KMinimalistUtility.deep_copy(value)
     end
+
+    return new_style
   end
 
   return parsed_style

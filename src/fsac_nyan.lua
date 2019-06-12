@@ -119,10 +119,7 @@ FSACNyan.draw_gui = function(frame, superadmin)
   frame.add{type = "frame", caption = "Rainbow Color", name = "nyan_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
   KMinimalistStyling.apply_style(
     frame.nyan_frame,
-    {
-      padding = 10,
-      margin = {bottom = 5}
-    }
+    {padding = 10, bottom_margin = 5 }
   )
 
   frame.nyan_frame.add{type = "table", name = "nyan_table1", column_count = 1}
@@ -130,28 +127,25 @@ FSACNyan.draw_gui = function(frame, superadmin)
   frame.nyan_frame.nyan_table1.add{type = "table", name = "nyan_table1_2", column_count = 2}
   KMinimalistStyling.apply_style(
     frame.nyan_frame.nyan_table1.nyan_table1_2,
-    {margin = {top = 5}}
+    {top_margin = 5}
   )
 
   local players_names = FSACMainScript.get_player_names()
   frame.nyan_frame.nyan_table1.nyan_table1_1.add{type = "drop-down", name = "nyan_player_drop_down", selected_index = 1, items = players_names}
   KMinimalistStyling.apply_style(
     frame.nyan_frame.nyan_table1.nyan_table1_1.nyan_player_drop_down,
-    {size = {width = 203}}
+    {width_f = 203}
   )
   superadmin.nyan_player_name = players_names[1]
 
   frame.nyan_frame.nyan_table1.nyan_table1_2.add{type = "button", name="start_nyan", caption = "Start", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.nyan_frame.nyan_table1.nyan_table1_2.start_nyan,
-    {
-      size = {width = 95},
-      margin = {right = 9}
-    }
+    { width_f = 95, right_margin = 9 }
   )
   frame.nyan_frame.nyan_table1.nyan_table1_2.add{type = "button", name="end_nyan", caption = "Stop", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.nyan_frame.nyan_table1.nyan_table1_2.end_nyan,
-    {size = {width = 95}}
+    {width_f = 95}
   )
 end

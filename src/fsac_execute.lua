@@ -23,25 +23,18 @@ FSACExecute.draw_gui = function(frame, superadmin)
   frame.add{type = "frame", caption = "Execute Menu", name = "cheesy_frame", direction = "vertical", style = "inside_deep_frame_for_tabs"}
   KMinimalistStyling.apply_style(
     frame.cheesy_frame,
-    {
-      padding = 10,
-      margin = {bottom = 5}
-    }
+    {padding = 10, bottom_margin = 5 }
   )
 
   frame.cheesy_frame.add{type = "textfield", name = "fsac_string"}
   KMinimalistStyling.apply_style(
     frame.cheesy_frame.fsac_string,
-    {size = {width = 200}}
+    {width_f = 200}
   )
   frame.cheesy_frame.add{type = "button", name = "fsac_enter", caption = "Enter", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(
     frame.cheesy_frame.fsac_enter,
-    {
-      size = {width = 200},
-      padding = {right = 2, left = 3},
-      margin = {top = 5}
-    }
+    { width_f = 200, right_padding = 2, left_padding = 3, top_margin = 5}
   )
 
   if superadmin.command_string == nil then

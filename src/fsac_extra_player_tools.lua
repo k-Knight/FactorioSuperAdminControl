@@ -42,7 +42,7 @@ FSACExtraPlayerTools.update_values = function(player)
 end
 
 FSACExtraPlayerTools.clear_armor = function(player)
-  local p_armor = player.get_inventory(defines.inventory.player_armor)[1]
+  local p_armor = player.get_inventory(defines.inventory.character_armor)[1]
   if p_armor ~= nil then
     p_armor.clear()
   end
@@ -59,7 +59,7 @@ end
 
 FSACExtraPlayerTools.give_op_armor = function(player)
   player.insert{name="power-armor-mk2", count = 1}
-  local p_armor = player.get_inventory(defines.inventory.player_armor)[1].grid
+  local p_armor = player.get_inventory(defines.inventory.character_armor)[1].grid
   p_armor.put({name = "fusion-reactor-equipment"})
   p_armor.put({name = "fusion-reactor-equipment"})
   p_armor.put({name = "exoskeleton-equipment"})
@@ -200,252 +200,88 @@ FSACExtraPlayerTools.draw = function(frame, superadmin)
   end
 
   frame.add{type = "flow", name="ex_pt_flow_1", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_1,
-    {
-      margin = {horizontal = 5, top = 10},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_1, "fsac_extra_flow", { top_margin = 10})
 
   frame.ex_pt_flow_1.add{type = "label", name="ex_pt_select_label", caption = "[font=default-semibold]Select a player: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_1.ex_pt_select_label,
-    {
-      size = {width = 332},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_1.ex_pt_select_label, "fsac_extra_label", { width_f = 332 })
 
   local players_names = FSACMainScript.get_player_names()
   frame.ex_pt_flow_1.add{type = "drop-down", name = "ex_pt_dropdown", selected_index = 1, items = players_names}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_1.ex_pt_dropdown,
-    {size = {width = 400}}
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_1.ex_pt_dropdown, { width_f = 400 })
+
   superadmin.extras.player_tools.player_name = players_names[1]
 
   frame.add{type = "flow", name="ex_pt_flow_2", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_2,
-    {
-      margin = {horizontal = 5, top = 30},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_2, "fsac_extra_flow", { top_margin = 30})
 
   frame.ex_pt_flow_2.add{type = "label", name="ex_pt_cheat_label", caption = "[font=default-semibold]Enable cheat mode: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_2.ex_pt_cheat_label,
-    {
-      size = {width = 712},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_2.ex_pt_cheat_label, "fsac_extra_label", { width_f = 712 })
+
   frame.ex_pt_flow_2.add{type = "checkbox", name="ex_pt_cheat_checkbox", caption = "", state = game.players[superadmin.extras.player_tools.player_name].cheat_mode}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_2.ex_pt_cheat_checkbox,
-    {
-      size = {height = 20, width = 20},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_2.ex_pt_cheat_checkbox, { height_f = 20, width_f = 20, margin = 0 })
 
   frame.add{type = "flow", name="ex_pt_flow_3", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_3,
-    {
-      margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_3, "fsac_extra_flow")
 
   frame.ex_pt_flow_3.add{type = "label", name="ex_pt_kill_label", caption = "[font=default-semibold]Kill player: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_3.ex_pt_kill_label,
-    {
-      size = {width = 454},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_3.ex_pt_kill_label, "fsac_extra_label", { width_f = 454 })
+
   frame.ex_pt_flow_3.add{type = "button", name="ex_pt_kill", caption = "Kill", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_3.ex_pt_kill,
-    {
-      size = {width = 135},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_3.ex_pt_kill, "fsac_extra_btn")
+
   frame.ex_pt_flow_3.add{type = "button", name="ex_pt_kill_long", caption = "Kill Forever", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_3.ex_pt_kill_long,
-    {
-      size = {width = 135},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_3.ex_pt_kill_long, "fsac_extra_btn")
 
   frame.add{type = "flow", name="ex_pt_flow_4", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_4,
-    {
-      margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_4, "fsac_extra_flow")
 
   frame.ex_pt_flow_4.add{type = "label", name="ex_pt_resurrect_label", caption = "[font=default-semibold]Resurrect player: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_4.ex_pt_resurrect_label,
-    {
-      size = {width = 597},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_4.ex_pt_resurrect_label, "fsac_extra_label", { width_f = 597 })
+
   frame.ex_pt_flow_4.add{type = "button", name="ex_pt_resurrect", caption = "Resurrect", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_4.ex_pt_resurrect,
-    {
-      size = {width = 135},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_4.ex_pt_resurrect, "fsac_extra_btn")
 
   frame.add{type = "flow", name="ex_pt_flow_5", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_5,
-    {
-      margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_5, "fsac_extra_flow")
 
   frame.ex_pt_flow_5.add{type = "label", name="ex_pt_craft_label", caption = "[font=default-semibold]Crafting speed modifier: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_5.ex_pt_craft_label,
-    {
-      size = {width = 332},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_5.ex_pt_craft_label, "fsac_extra_label", { width_f = 332 })
+
   frame.ex_pt_flow_5.add{type = "slider", name="ex_pt_craft_slider", minimum_value = 0.0, maximum_value = 200.0, value = game.players[superadmin.extras.player_tools.player_name].character_crafting_speed_modifier}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_5.ex_pt_craft_slider,
-    {
-      size = {width = 400},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_5.ex_pt_craft_slider, { width_f = 400, margin = 0 })
 
   frame.add{type = "flow", name="ex_pt_flow_6", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_6,
-    {
-      margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_6, "fsac_extra_flow")
 
   frame.ex_pt_flow_6.add{type = "label", name="ex_pt_mine_label", caption = "[font=default-semibold]Mining speed modifier: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_6.ex_pt_mine_label,
-    {
-      size = {width = 332},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_6.ex_pt_mine_label, "fsac_extra_label", { width_f = 332 })
+
   frame.ex_pt_flow_6.add{type = "slider", name="ex_pt_mine_slider", minimum_value = 0.0, maximum_value = 100.0, value = game.players[superadmin.extras.player_tools.player_name].character_mining_speed_modifier}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_6.ex_pt_mine_slider,
-    {
-      size = {width = 400},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_6.ex_pt_mine_slider, { width_f = 400, margin = 0 })
 
   frame.add{type = "flow", name="ex_pt_flow_7", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_7,
-    {
-      margin = {horizontal = 5, top = 5},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_7, "fsac_extra_flow")
 
   frame.ex_pt_flow_7.add{type = "label", name="ex_pt_run_label", caption = "[font=default-semibold]Running speed modifier: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_7.ex_pt_run_label,
-    {
-      size = {width = 332},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_7.ex_pt_run_label, "fsac_extra_label", { width_f = 332 })
+
   frame.ex_pt_flow_7.add{type = "slider", name="ex_pt_run_slider", minimum_value = 0.0, maximum_value = 50.0, value = game.players[superadmin.extras.player_tools.player_name].character_running_speed_modifier}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_7.ex_pt_run_slider,
-    {
-      size = {width = 400},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_7.ex_pt_run_slider, { width_f = 400, margin = 0 })
 
   frame.add{type = "flow", name="ex_pt_flow_8", direction="horizontal"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_8,
-    {
-      margin = {horizontal = 5, top = 5, bottom = 10},
-      spacing = {horizontal = 8},
-      align = {vertical = "center"}
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_8, "fsac_extra_flow", { bottom_margin = 10 })
 
   frame.ex_pt_flow_8.add{type = "label", name="ex_pt_eq_label", caption = "[font=default-semibold]Equipment manipulation: [/font]"}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_8.ex_pt_eq_label,
-    {
-      size = {width = 311},
-      padding = 0,
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_8.ex_pt_eq_label, "fsac_extra_label", { width_f = 311 })
+
   frame.ex_pt_flow_8.add{type = "button", name="ex_pt_give_armor", caption = "Give OP Armor", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_8.ex_pt_give_armor,
-    {
-      size = {width = 135},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_8.ex_pt_give_armor, "fsac_extra_btn")
+
   frame.ex_pt_flow_8.add{type = "button", name="ex_pt_rm_armor", caption = "Remove Armor", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_8.ex_pt_rm_armor,
-    {
-      size = {width = 135},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_8.ex_pt_rm_armor, "fsac_extra_btn")
+
   frame.ex_pt_flow_8.add{type = "button", name="ex_pt_rm_all_armor", caption = "Remove All Armor", mouse_button_filter = {"left"}}
-  KMinimalistStyling.apply_style(
-    frame.ex_pt_flow_8.ex_pt_rm_all_armor,
-    {
-      size = {width = 135},
-      margin = 0
-    }
-  )
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_8.ex_pt_rm_all_armor, "fsac_extra_btn")
 
   FSACExtraPlayerTools.update_values(game.players[superadmin.extras.player_tools.player_name])
 end
