@@ -24,7 +24,7 @@ FSACSuperAdminManager.promote = function(name)
   end
 
   global.superadmin_list[#global.superadmin_list + 1] = FSACSuperAdmin.new(name)
-  FSACExtra.run_registrations(global.superadmin_list[#global.superadmin_list])
+  FSACExtra.run_registrations(global.superadmin_list[#global.superadmin_list].name)
 
   FSACSuperAdminManager.print("Player [" .. name .. "] was promoted to superadmin")
   FSACMainScript.draw_gui_if_absent()

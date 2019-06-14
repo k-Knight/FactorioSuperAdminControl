@@ -14,7 +14,7 @@ require("./fasc_super_admin_manager.lua") -- superadmin management
 require("./fsac_nyan.lua") -- nyan character color functionality
 require("./fsac_execute.lua") -- execute menu functionality
 require("./fsac_game_speed.lua") -- game speed menu functionality
-require("./fsac_extra.lua") -- extras menu functionality
+require("./fsac_extra.lua") -- extra menu functionality
 
 require("./extra/fsac_extra_admin_tools.lua") -- [extra module]: Admin Tools
 require("./extra/fsac_extra_player_tools.lua") -- [extra module]: Player Tools
@@ -32,33 +32,6 @@ FSACMainScript.init = function()
 
   FSACSuperAdminManager.init(global.player_name)
 end
-
--- =========================================================================
--- ========================== FOR DEVELOPERS ===============================
--- =========================================================================
--- ======================= Interface Description ===========================
--- =========================================================================
---
--- ===============================================================================================================================
---
---  function (from ./fsac_extra.lua):
---      FSACExtra.register_extra_functionality(button_caption, draw_function, handlers)
---
---        description:
---            adds additional functionality to the FSAC script
---        arguments:
---            button_caption: the name of the button (that is displayed to the user)
---            draw_function: draw function of your functionality
---                as an argument should take a frame LuaGuiElement (https://lua-api.factorio.com/latest/LuaGuiElement.html)
---            handlers: table with handlers for gui events, has following elements:
---                on_click: handler function, takes event arguments of on_gui_click event
---                on_checked: handler function, takes event arguments of on_gui_checked_state_changed event
---                on_selected: handler function, takes event arguments of on_gui_selection_state_changed event
---                on_value: handler function, takes event arguments of on_gui_value_changed event
---
---        for reference on factorio api events: https://lua-api.factorio.com/latest/events.html
---
--- ===============================================================================================================================
 
 
 

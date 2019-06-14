@@ -176,7 +176,11 @@ FSACExtra.register_functionality = function(name, button_caption, draw_function,
     end
     return result
   else
-    return FSACExtra.add_functionality(name, button_caption, draw_function, handlers, admin)
+    local is_admin, admin_index = FSACSuperAdminManager.is_superadmin(admin)
+
+    if is_admin == true then
+      return FSACExtra.add_functionality(name, button_caption, draw_function, handlers, FSACSuperAdminManager.get(admin_index))
+    end
   end
 end
 
