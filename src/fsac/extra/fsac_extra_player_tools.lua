@@ -285,3 +285,25 @@ FSACExtraPlayerTools.draw = function(frame, superadmin)
 
   FSACExtraPlayerTools.update_values(game.players[superadmin.extras.player_tools.player_name])
 end
+
+
+
+-- =======================================================================
+-- ============================ REGISTRATION =============================
+-- =======================================================================
+
+
+
+FSACExtra.static_register(
+  "player_tools",
+  "Player Tools",
+  FSACExtraPlayerTools.draw,
+  {
+    on_click = FSACExtraPlayerTools.on_click_handler,
+    on_selected = FSACExtraPlayerTools.on_select_handler,
+    on_checked = FSACExtraPlayerTools.on_checked_handler,
+    on_value = FSACExtraPlayerTools.on_value_handler
+  }
+)
+
+

@@ -16,6 +16,9 @@ require("./fsac_execute.lua") -- execute menu functionality
 require("./fsac_game_speed.lua") -- game speed menu functionality
 require("./fsac_extra.lua") -- extras menu functionality
 
+require("./extra/fsac_extra_admin_tools.lua") -- [extra module]: Admin Tools
+require("./extra/fsac_extra_player_tools.lua") -- [extra module]: Player Tools
+
 
 
 FSACMainScript = {}

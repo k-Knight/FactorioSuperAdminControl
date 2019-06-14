@@ -1,30 +1,64 @@
 # FactorioSuperAdminControl
-A script for the game Factorio that provides administrative and other functionality through GUI.
+A script for the game Factorio that provides administrative and other functionality through GUI. The offered functionality is quite powerful and influence the game to a significant degree.
 
 ## What this script features
 
 1. Select players that will shimmer with rainbow colors.
-2. Execute **lua** scripts.
+2. Execute **Lua** scripts.
 3. Manipulate game speed.
 4. Promote and demote players to admin status.
 5. Suppress console and chat for everyone, except for you.
 6. Kill (including forever) or resurrect players.
 7. Manipulate different characteristics of players.
-7. Manipulate equipment of players.
-
-## Configuring the script
-
-To configure a script you just have to open **fsac_main.lua** file and change the following line (*you have to enter your name for script to recognize you as game's master*):
-```lua
-  global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
- ```
+8. Manipulate equipment of players.
+9. Promote other players to ***super-admin*** status.
 
 ## How to install a script
 
-The script files include a default **control.lua** file if you want to inject a script into your **existing save** or you want to **play with achievements enabled**. Just copy all the script files into the save archive.
+The script files include a default **``control.lua``** file if you want to inject a script into your **existing save** or you want to **play with achievements enabled**. Just copy all the script files (``control.lua``, folder ``kminimalist`` and folder ``fsac``) into the save archive.
 
-Otherwise, if you want to attach this script your custom **control.lua** script, just be make sure to require **fsac_main.lua** at the end of your script.
+Otherwise, if you want to attach this script your custom **``control.lua``** script, just be make sure to require **``fsac_main.lua``** at the end of your script.
 
-## Adding extra modules
+## Configuring the script
 
-If you want to add extra modules to the script you can explore file **fsac_main.lua** to see the interface description how to register additional functionality to the script.
+To configure a script you just have to open **``fsac/fsac_main.lua``** file and change the following line (*you have to enter your name for script to recognize you as core super-admin*):
+```lua
+global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
+ ```
+
+# FSAC Reference
+
+The script supports  adding new modules with differet functionality for every super-admin (done statically) or for individual both during runtime and during the control stage of the game.
+
+The script makes use of **[kminimalist library](https://github.com/k-Knight/kminimalist)** for handling event registations, GUI element styling during runtime and manipulating Factorio API tables without numerous checks and conditions.
+
+## Adding extra modules during the cotrol stage
+
+To register extra functionality during the control stage 3 following steps need to be done.
+
+1. Create your script and place it in ``fsac/extra/`` folder.
+2. At the end of your script file make a call to [``FSACExtra.static_register``]() function with appropriate arguments.
+3. As **Lua** language does not support including script files, it is neccessary to add a ``require(path_to_your_file)`` statement in the ``fsac/fsac_main.lua`` file **AFTER** the ``require`` statement for ``fsac_extra.lua`` file.
+   ```lua
+   require("./fsac_extra.lua") -- extras menu functionality
+
+   require("./extra/your_module_name.lua")
+   ```
+
+### Function ```FSACExtra.static_register(name, button_caption, draw_function, handlers)```
+
+This function adds the registration of additional functionality to all super-admins. It should be noted that this functions **MUST NOT** be called during the rutime of the game and only during the control stage because of possible desyncs.
+
+* **``name``** – ***[string]*** the unique identifier of the additional module
+* **``button_caption``** – ***[string]*** the caption of the button that will displayed in extra functionality menu (*readable name of the additional module*)
+* **``draw_function``** – ***[function]*** the draw function of additional module as an argument should take a frame [**``LuaGuiElement``**](https://lua-api.factorio.com/latest/LuaGuiElement.html)
+* **``handlers``** – ***[table]*** with handlers for gui events, has following elements:
+  + **``on_click``** – ***[function]*** handler, takes event arguments of [**``on_gui_click``**](https://lua-api.factorio.com/latest/events.html#on_gui_click) event
+  + **``on_checked``** – ***[function]*** handler, takes event arguments of [**``on_gui_checked_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_checked_state_changed) event
+  + **``on_selected``** – ***[function]*** handler, takes event arguments of [**``on_gui_selection_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_selection_state_changed) event
+  + **``on_value``** – ***[function]*** handler, takes event arguments of [**``on_gui_value_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_value_changed) event
+
+
+## Adding extra modules during runtime
+
+### Function ```FSACExtra.register_extra_functionality(name, button_caption, draw_function, handlers, admin)```

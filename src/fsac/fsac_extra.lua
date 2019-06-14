@@ -4,12 +4,6 @@
 
 
 
-require("./fsac_extra_admin_tools.lua") -- [extra module]: Admin Tools
-require("./fsac_extra_player_tools.lua") -- [extra module]: Player Tools
-
-
-
--- function for registerig default functionality (included in gui)
 FSACExtra = {}
 FSACExtra.run_registrations = function(admin)
   KMinimalistStyling.define_style(
@@ -28,29 +22,6 @@ FSACExtra.run_registrations = function(admin)
     "fsac_extra_drdwn",
     { width_f = 200 }
   )
-
-  FSACExtra.register_functionality(
-    "admin_tools",
-    "Admin Tools",
-    FSACExtrasAdminTools.draw,
-    {
-      on_click = FSACExtrasAdminTools.on_click_handler,
-      on_selected = FSACExtrasAdminTools.on_select_handler
-    },
-    admin
-  )
-  FSACExtra.register_functionality(
-    "player_tools",
-    "Player Tools",
-    FSACExtraPlayerTools.draw,
-    {
-      on_click = FSACExtraPlayerTools.on_click_handler,
-      on_selected = FSACExtraPlayerTools.on_select_handler,
-      on_checked = FSACExtraPlayerTools.on_checked_handler,
-      on_value = FSACExtraPlayerTools.on_value_handler
-    },
-    admin
-  )
 end
 
 
@@ -60,6 +31,15 @@ end
 -- =======================================================================
 
 
+
+FSACExtra.static_register = function(name, button_caption, draw_function, handlers)
+  local func_ref = FSACExtra.run_registrations
+
+  FSACExtra.run_registrations = function(admin)
+    func_ref(admin)
+    FSACExtra.register_functionality(name, button_caption, draw_function, handlers, admin)
+  end
+end
 
 FSACExtra.on_gui_click_handler = function(event, super_index)
   local admin = FSACSuperAdminManager.get(super_index)

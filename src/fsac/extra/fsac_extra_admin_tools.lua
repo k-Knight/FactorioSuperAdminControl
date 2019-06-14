@@ -212,3 +212,21 @@ FSACExtrasAdminTools.draw = function(frame, superadmin)
   frame.ex_at_flow_5.add{type = "button", name="ex_at_super_demote", caption = "Demote player", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(frame.ex_at_flow_5.ex_at_super_demote, "fsac_extra_btn")
 end
+
+
+
+-- =======================================================================
+-- ============================ REGISTRATION =============================
+-- =======================================================================
+
+
+
+FSACExtra.static_register(
+  "admin_tools",
+  "Admin Tools",
+  FSACExtrasAdminTools.draw,
+  {
+    on_click = FSACExtrasAdminTools.on_click_handler,
+    on_selected = FSACExtrasAdminTools.on_select_handler
+  }
+)
