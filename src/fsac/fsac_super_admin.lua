@@ -11,7 +11,7 @@ FSACSuperAdmin.new = function(admin_name)
 
   function new_admin:get_index()
     if game.players[self.name] ~= nil then
-      return KMinimalistSafeApiObject.new(game.players[self].index)
+      return game.players[self].index
     end
     return nil
   end
