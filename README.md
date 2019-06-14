@@ -32,7 +32,7 @@ The script supports  adding new modules with different functionality for every s
 
 The script makes use of the **[kminimalist library](https://github.com/k-Knight/kminimalist)** for handling event registrations, GUI element styling during runtime and manipulating Factorio API tables without numerous checks and conditions.
 
-## Adding extra modules during the cotrol stage
+## Adding extra modules during the control stage
 
 To register extra functionality during the control stage 3 following steps need to be done.
 
@@ -51,21 +51,21 @@ This function adds the registration of additional functionality to all super-adm
 
 * **``name``** – ***string*** the unique identifier of the additional module
 * **``button_caption``** – ***string*** the caption of the button that will be displayed in extra functionality menu (*readable name of the additional module*)
-* **``draw_function``** – ***function*** the draw function of additional module as an argument should take a frame [**``LuaGuiElement``**](https://lua-api.factorio.com/latest/LuaGuiElement.html)
-* **``handlers``** – ***table*** with handlers for GUI events, has the following elements:
-  + **``on_click``** – ***function*** handler, takes event arguments of [**``on_gui_click``**](https://lua-api.factorio.com/latest/events.html#on_gui_click) event
-  + **``on_checked``** – ***function*** handler, takes event arguments of [**``on_gui_checked_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_checked_state_changed) event
-  + **``on_selected``** – ***function*** handler, takes event arguments of [**``on_gui_selection_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_selection_state_changed) event
-  + **``on_value``** – ***function*** handler, takes event arguments of [**``on_gui_value_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_value_changed) event
+* **``draw_function``** – ***function*** the draw function of additional module as an argument should take a frame [**``LuaGuiElement``**](https://lua-api.factorio.com/latest/LuaGuiElement.html) and a [super-admin table](#super-admin-table) of a player for which the GUI is being drawn
+* **``handlers``** – ***table*** with handlers for GUI events, **each handler** takes corresponding event arguments in a table as a **first argument** and a **[super-admin table](#super-admin-table)** of a player who triggered the event as a **second argument**, has the following elements:
+  + **``on_click``** – ***function*** handler for [**``on_gui_click``**](https://lua-api.factorio.com/latest/events.html#on_gui_click) event
+  + **``on_checked``** – ***function*** handler for  [**``on_gui_checked_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_checked_state_changed) event
+  + **``on_selected``** – ***function*** handler for [**``on_gui_selection_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_selection_state_changed) event
+  + **``on_value``** – ***function*** handler for [**``on_gui_value_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_value_changed) event
 
 
-## Adding extra modules during runtime
+## Adding extra modules during the runtime
 
-The script supports also registration of additional functionality during runtime. The registration needs to be done by calling the ``FSACExtra.register_extra_functionality`` function with the appropriate arguments.
+The script supports also registration of additional functionality during runtime. The registration needs to be done by calling the ``FSACExtra.register_functionality`` function with the appropriate arguments.
 
 This can be viewed as a more personalized approach for registering functionality as the functionality can get added to the only super-admin provided in the ``admin`` argument of aforementioned function. It should be mentioned that any function of the additional module that is not provided in the function arguments **must be saved** to the ``global`` table of the game to persist through the save / load cycle.
 
-### Function ``FSACExtra.register_extra_functionality(name, button_caption, draw_function, handlers, admin)``
+### Function ``FSACExtra.register_functionality(name, button_caption, draw_function, handlers, admin)``
 
 As described above, this function registers additional module to a specific super-admin. This function **DOES NOT** work during the control stage of the game.
 
@@ -73,13 +73,62 @@ As described above, this function registers additional module to a specific supe
 
 * **``name``** – ***string*** the unique identifier of the additional module
 * **``button_caption``** – ***string*** the caption of the button that will be displayed in extra functionality menu (*readable name of the additional module*)
-* **``draw_function``** – ***function*** the draw function of additional module as an argument should take a frame [**``LuaGuiElement``**](https://lua-api.factorio.com/latest/LuaGuiElement.html)
-* **``handlers``** – ***table*** with handlers for GUI events, has the following elements:
-  + **``on_click``** – ***function*** handler, takes event arguments of [**``on_gui_click``**](https://lua-api.factorio.com/latest/events.html#on_gui_click) event
-  + **``on_checked``** – ***function*** handler, takes event arguments of [**``on_gui_checked_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_checked_state_changed) event
-  + **``on_selected``** – ***function*** handler, takes event arguments of [**``on_gui_selection_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_selection_state_changed) event
-  + **``on_value``** – ***function*** handler, takes event arguments of [**``on_gui_value_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_value_changed) event
+* **``draw_function``** – ***function*** the draw function of additional module as an argument should take a frame [**``LuaGuiElement``**](https://lua-api.factorio.com/latest/LuaGuiElement.html) and a [super-admin table](#super-admin-table) of a player for which the GUI is being drawn
+* **``handlers``** – ***table*** with handlers for GUI events, **each handler** takes corresponding event arguments in a table as a **first argument** and a **[super-admin table](#super-admin-table)** of a player who triggered the event as a **second argument**, has the following elements:
+  + **``on_click``** – ***function*** handler for [**``on_gui_click``**](https://lua-api.factorio.com/latest/events.html#on_gui_click) event
+  + **``on_checked``** – ***function*** handler for  [**``on_gui_checked_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_checked_state_changed) event
+  + **``on_selected``** – ***function*** handler for [**``on_gui_selection_state_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_selection_state_changed) event
+  + **``on_value``** – ***function*** handler for [**``on_gui_value_changed``**](https://lua-api.factorio.com/latest/events.html#on_gui_value_changed) event
 * **``admin``** – ***string*** the name of the super-admin that the additional module should be registered to. If the name provided does not belong to any of the super-admins then the registration **does not take place**. If ``nil`` then the functionality gets registered for every super-admin who currently is promoted to the status (*i.e. does not affect future super-admins*).
+
+### Example of adding functionality during the runtime
+
+This example depitcs process of registering of a simple additional module that has a button that prints ``Hello World!`` when pressed.
+
+```lua
+local draw_func = function(frame, superadmin)
+  frame.add{
+    type = "flow",
+    name = "example_flow",
+    direction = "horizontal"
+  }
+
+  KMinimalistStyling.apply_style(
+    frame.flow,
+    "fsac_extra_flow",
+    { top_margin = 10, bottom_margin = 10 }
+  )
+
+  frame.example_flow.add{
+    type = "button",
+    name = "example_btn",
+    caption = "Click me",
+    mouse_button_filter = {"left"}
+  }
+
+  KMinimalistStyling.apply_style(
+    frame.example_flow.example_btn,
+    "fsac_extra_btn",
+    { margin = 10 }
+  )
+end
+
+local on_click_handler = function(event, superadmin)
+  if event.element.name == "example_btn" then
+    game.print("Hello World!")
+  end
+end
+
+FSACExtra.register_functionality(
+  "extra_example",
+  "Example module",
+  draw_func,
+  {
+    on_click = on_click_handler,
+  },
+  "YOUR_NAME_HERE"
+)
+```
 
 ## Managing super-admins
 
@@ -159,3 +208,29 @@ Gets GUI container table of the corresponding player.
 Gets the player object table of the corresponding player.
 
 **Return value:** ***table*** safe API object ([kminimalist safe API object](https://github.com/k-Knight/kminimalist#safe-api-object-functionality)) of the [LuaPlayer](https://lua-api.factorio.com/latest/LuaPlayer.htmll).
+
+### Example of work with super-admin table
+
+```lua
+-- promoting a player to super-admin status
+FSACSuperAdminManager.promote("YOUR_NAME_HERE")
+-- checking if a player has the super-admin status
+local is_admin, index = FSACSuperAdminManager.is_superadmin("YOUR_NAME_HERE")
+
+if is_admin == true then
+  -- getting super-admin table
+  local super_admin = FSACSuperAdminManager.get(index)
+  -- saving my_variable (persists through save/load cycle)
+  super_admin.extras.my_variable = "my_value"
+  -- printing the username of the player
+  game.print( super_admin:get_player().name )
+  -- getting GUI container of the player
+  local player_gui = super_admin:get_gui()
+  -- creating frame in player GUI
+  player_gui.top.add{
+    type = "frame",
+    name = "example_frame",
+    caption = "example frame"
+  }
+end
+```
