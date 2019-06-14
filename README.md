@@ -15,7 +15,7 @@ A script for the game Factorio that provides administrative and other functional
 
 ## How to install a script
 
-The script files include a default **``control.lua``** file if you want to inject a script into your **existing save** or you want to **play with achievements enabled**. Just copy all the script files (``control.lua``, folder ``kminimalist`` and folder ``fsac``) into the save archive.
+The script files include a default **``control.lua``** file if you want to inject a script into your **existing save** or you want to **play with achievements enabled**. Just copy all the script files (``control.lua``, folder ``KMinimalist`` and folder ``fsac``) into the save archive.
 
 Otherwise, if you want to attach this script your custom **``control.lua``** script, just be make sure to require **``fsac_main.lua``** at the end of your script.
 
@@ -30,7 +30,7 @@ global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS 
 
 The script supports  adding new modules with different functionality for every super-admin (done statically) or for individual both during runtime and during the control stage of the game.
 
-The script makes use of the **[kminimalist library](https://github.com/k-Knight/kminimalist)** for handling event registrations, GUI element styling during runtime and manipulating Factorio API tables without numerous checks and conditions.
+The script makes use of the **[KMinimalist library](https://github.com/k-Knight/KMinimalist)** for handling event registrations, GUI element styling during runtime and manipulating Factorio API tables without numerous checks and conditions.
 
 ## Adding extra modules during the control stage
 
@@ -201,13 +201,13 @@ Gets the index of the player in the ``game.players`` table.
 
 Gets GUI container table of the corresponding player.
 
-**Return value:** ***table*** safe API object ([kminimalist safe API object](https://github.com/k-Knight/kminimalist#safe-api-object-functionality)) of the [LuaGui](https://lua-api.factorio.com/latest/LuaGui.html).
+**Return value:** ***table*** safe API object ([KMinimalist safe API object](https://github.com/k-Knight/KMinimalist#safe-api-object-functionality)) of the [LuaGui](https://lua-api.factorio.com/latest/LuaGui.html).
 
 ### Function ``:get_player()``
 
 Gets the player object table of the corresponding player.
 
-**Return value:** ***table*** safe API object ([kminimalist safe API object](https://github.com/k-Knight/kminimalist#safe-api-object-functionality)) of the [LuaPlayer](https://lua-api.factorio.com/latest/LuaPlayer.htmll).
+**Return value:** ***table*** safe API object ([KMinimalist safe API object](https://github.com/k-Knight/KMinimalist#safe-api-object-functionality)) of the [LuaPlayer](https://lua-api.factorio.com/latest/LuaPlayer.htmll).
 
 ### Example of work with super-admin table
 
