@@ -3,6 +3,10 @@ require("./fsac_super_admin.lua")
 FSACSuperAdminManager = {}
 
 FSACSuperAdminManager.demote = function(name)
+  if global.superadmin_list == nil then
+    return false
+  end
+
   local result = false
 
   for index = #global.superadmin_list, 1, -1 do
@@ -38,6 +42,10 @@ FSACSuperAdminManager.init = function(name)
 end
 
 FSACSuperAdminManager.print = function(message, identifier)
+  if global.superadmin_list == nil then
+    return
+  end
+
   for _, admin in ipairs(global.superadmin_list) do
     local player = game.players[admin.name]
 
@@ -52,6 +60,10 @@ FSACSuperAdminManager.print = function(message, identifier)
 end
 
 FSACSuperAdminManager.is_superadmin = function(identifier)
+  if global.superadmin_list == nil then
+    return false, nil
+  end
+
   if type(identifier) == "string" then
     for index, admin in ipairs(global.superadmin_list) do
       if admin.name == identifier then
@@ -74,6 +86,10 @@ FSACSuperAdminManager.is_superadmin = function(identifier)
 end
 
 FSACSuperAdminManager.get = function(index)
+  if global.superadmin_list == nil then
+    return nil
+  end
+
   if 1 <= index and index <= #global.superadmin_list then
     return global.superadmin_list[index]
   end
@@ -81,5 +97,9 @@ FSACSuperAdminManager.get = function(index)
 end
 
 FSACSuperAdminManager.get_all = function()
+  if global.superadmin_list == nil then
+    return {}
+  end
+
   return global.superadmin_list
 end
