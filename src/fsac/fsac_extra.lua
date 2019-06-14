@@ -5,23 +5,33 @@
 
 
 FSACExtra = {}
+FSACExtra.registrations = {}
+
 FSACExtra.run_registrations = function(admin)
   KMinimalistStyling.define_style(
     "fsac_extra_flow",
-    { horizontal_margin = 5, top_margin = 5, horizontal_spacing = 8, vertical_align = "center" }
+    { horizontal_margin = 5, top_margin = 5, horizontal_spacing = 8, vertical_align = "center" },
+    false
   )
   KMinimalistStyling.define_style(
     "fsac_extra_btn",
-    { width_f = 135, horizontal_padding = 2, horizontal_margin = 0 }
+    { width_f = 135, horizontal_padding = 2, horizontal_margin = 0 },
+    false
   )
   KMinimalistStyling.define_style(
     "fsac_extra_label",
-    { padding = 0, margin = 0 }
+    { padding = 0, margin = 0 },
+    false
   )
   KMinimalistStyling.define_style(
     "fsac_extra_drdwn",
-    { width_f = 200 }
+    { width_f = 200 },
+    false
   )
+
+  for _, func in ipairs(FSACExtra.registrations) do
+    func(admin)
+  end
 end
 
 
@@ -33,10 +43,7 @@ end
 
 
 FSACExtra.static_register = function(name, button_caption, draw_function, handlers)
-  local func_ref = FSACExtra.run_registrations
-
-  FSACExtra.run_registrations = function(admin)
-    func_ref(admin)
+  FSACExtra.registrations[#FSACExtra.registrations + 1] = function(admin)
     FSACExtra.register_functionality(name, button_caption, draw_function, handlers, admin)
   end
 end

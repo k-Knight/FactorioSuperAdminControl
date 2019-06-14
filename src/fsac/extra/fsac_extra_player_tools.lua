@@ -42,39 +42,45 @@ FSACExtraPlayerTools.update_values = function(player)
 end
 
 FSACExtraPlayerTools.clear_armor = function(player)
-  local p_armor = player.get_inventory(defines.inventory.character_armor)[1]
-  if p_armor ~= nil then
-    p_armor.clear()
+  if player.character ~= nil then
+    local p_armor = player.get_inventory(defines.inventory.character_armor)[1]
+    if p_armor ~= nil then
+      p_armor.clear()
+    end
   end
 end
 
 FSACExtraPlayerTools.delete_all_armor = function(player)
-  FSACExtraPlayerTools.clear_armor(player)
-  player.get_main_inventory().remove({name="power-armor-mk2", count = 4294967294})
-  player.get_main_inventory().remove({name="power-armor", count = 4294967294})
-  player.get_main_inventory().remove({name="modular-armor", count = 4294967294})
-  player.get_main_inventory().remove({name="heavy-armor", count = 4294967294})
-  player.get_main_inventory().remove({name="light-armor", count = 4294967294})
+  if player.character ~= nil then
+    FSACExtraPlayerTools.clear_armor(player)
+    player.get_main_inventory().remove({name="power-armor-mk2", count = 4294967294})
+    player.get_main_inventory().remove({name="power-armor", count = 4294967294})
+    player.get_main_inventory().remove({name="modular-armor", count = 4294967294})
+    player.get_main_inventory().remove({name="heavy-armor", count = 4294967294})
+    player.get_main_inventory().remove({name="light-armor", count = 4294967294})
+  end
 end
 
 FSACExtraPlayerTools.give_op_armor = function(player)
-  player.insert{name="power-armor-mk2", count = 1}
-  local p_armor = player.get_inventory(defines.inventory.character_armor)[1].grid
-  p_armor.put({name = "fusion-reactor-equipment"})
-  p_armor.put({name = "fusion-reactor-equipment"})
-  p_armor.put({name = "exoskeleton-equipment"})
-  p_armor.put({name = "exoskeleton-equipment"})
-  p_armor.put({name = "exoskeleton-equipment"})
-  p_armor.put({name = "exoskeleton-equipment"})
-  p_armor.put({name = "exoskeleton-equipment"})
-  p_armor.put({name = "energy-shield-mk2-equipment"})
-  p_armor.put({name = "energy-shield-mk2-equipment"})
-  p_armor.put({name = "energy-shield-mk2-equipment"})
-  p_armor.put({name = "energy-shield-mk2-equipment"})
-  p_armor.put({name = "personal-roboport-mk2-equipment"})
-  p_armor.put({name = "night-vision-equipment"})
-  p_armor.put({name = "battery-mk2-equipment"})
-  p_armor.put({name = "battery-mk2-equipment"})
+  if player.character ~= nil then
+    player.insert{name="power-armor-mk2", count = 1}
+    local p_armor = player.get_inventory(defines.inventory.character_armor)[1].grid
+    p_armor.put({name = "fusion-reactor-equipment"})
+    p_armor.put({name = "fusion-reactor-equipment"})
+    p_armor.put({name = "exoskeleton-equipment"})
+    p_armor.put({name = "exoskeleton-equipment"})
+    p_armor.put({name = "exoskeleton-equipment"})
+    p_armor.put({name = "exoskeleton-equipment"})
+    p_armor.put({name = "exoskeleton-equipment"})
+    p_armor.put({name = "energy-shield-mk2-equipment"})
+    p_armor.put({name = "energy-shield-mk2-equipment"})
+    p_armor.put({name = "energy-shield-mk2-equipment"})
+    p_armor.put({name = "energy-shield-mk2-equipment"})
+    p_armor.put({name = "personal-roboport-mk2-equipment"})
+    p_armor.put({name = "night-vision-equipment"})
+    p_armor.put({name = "battery-mk2-equipment"})
+    p_armor.put({name = "battery-mk2-equipment"})
+  end
 end
 
 FSACExtraPlayerTools.on_click_handler = function(event, superadmin)
@@ -247,7 +253,20 @@ FSACExtraPlayerTools.draw = function(frame, superadmin)
   frame.ex_pt_flow_5.add{type = "label", name="ex_pt_craft_label", caption = "[font=default-semibold]Crafting speed modifier: [/font]"}
   KMinimalistStyling.apply_style(frame.ex_pt_flow_5.ex_pt_craft_label, "fsac_extra_label", { width_f = 332 })
 
-  frame.ex_pt_flow_5.add{type = "slider", name="ex_pt_craft_slider", minimum_value = 0.0, maximum_value = 200.0, value = game.players[superadmin.extras.player_tools.player_name].character_crafting_speed_modifier}
+  local player = game.players[superadmin.extras.player_tools.player_name]
+  local character_crafting_speed_modifier = 0.0
+  local character_mining_speed_modifier = 0.0
+  local character_running_speed_modifier = 0.0
+  value = default_value
+  if player ~= nil then
+    if player.character ~= nil then
+      character_crafting_speed_modifier = player.character_crafting_speed_modifier
+      character_mining_speed_modifier = player.character_mining_speed_modifier
+      character_running_speed_modifier = player.character_running_speed_modifier
+    end
+  end
+
+  frame.ex_pt_flow_5.add{type = "slider", name="ex_pt_craft_slider", minimum_value = 0.0, maximum_value = 200.0, value = character_crafting_speed_modifier}
   KMinimalistStyling.apply_style(frame.ex_pt_flow_5.ex_pt_craft_slider, { width_f = 400, margin = 0 })
 
   frame.add{type = "flow", name="ex_pt_flow_6", direction="horizontal"}
@@ -256,7 +275,7 @@ FSACExtraPlayerTools.draw = function(frame, superadmin)
   frame.ex_pt_flow_6.add{type = "label", name="ex_pt_mine_label", caption = "[font=default-semibold]Mining speed modifier: [/font]"}
   KMinimalistStyling.apply_style(frame.ex_pt_flow_6.ex_pt_mine_label, "fsac_extra_label", { width_f = 332 })
 
-  frame.ex_pt_flow_6.add{type = "slider", name="ex_pt_mine_slider", minimum_value = 0.0, maximum_value = 100.0, value = game.players[superadmin.extras.player_tools.player_name].character_mining_speed_modifier}
+  frame.ex_pt_flow_6.add{type = "slider", name="ex_pt_mine_slider", minimum_value = 0.0, maximum_value = 100.0, value = character_mining_speed_modifier}
   KMinimalistStyling.apply_style(frame.ex_pt_flow_6.ex_pt_mine_slider, { width_f = 400, margin = 0 })
 
   frame.add{type = "flow", name="ex_pt_flow_7", direction="horizontal"}
@@ -265,7 +284,7 @@ FSACExtraPlayerTools.draw = function(frame, superadmin)
   frame.ex_pt_flow_7.add{type = "label", name="ex_pt_run_label", caption = "[font=default-semibold]Running speed modifier: [/font]"}
   KMinimalistStyling.apply_style(frame.ex_pt_flow_7.ex_pt_run_label, "fsac_extra_label", { width_f = 332 })
 
-  frame.ex_pt_flow_7.add{type = "slider", name="ex_pt_run_slider", minimum_value = 0.0, maximum_value = 50.0, value = game.players[superadmin.extras.player_tools.player_name].character_running_speed_modifier}
+  frame.ex_pt_flow_7.add{type = "slider", name="ex_pt_run_slider", minimum_value = 0.0, maximum_value = 50.0, value = character_running_speed_modifier}
   KMinimalistStyling.apply_style(frame.ex_pt_flow_7.ex_pt_run_slider, { width_f = 400, margin = 0 })
 
   frame.add{type = "flow", name="ex_pt_flow_8", direction="horizontal"}
