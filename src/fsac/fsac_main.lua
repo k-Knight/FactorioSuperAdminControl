@@ -74,21 +74,27 @@ end
 
 FSACMainScript.on_gui_checked_state_changed_handler = function(event)
   event = KMinimalistSafeApiObject.new(event)
+  is_admin, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
 
-  if event.element.name == "enable_fsac" then
-    FSACMainScript.toggle_superadmin_menu(event.player_index)
+  if is_admin then
+    if event.element.name == "enable_fsac" then
+      FSACMainScript.toggle_superadmin_menu(super_index)
+    end
+
+    FSACExtra.on_gui_checked_state_changed_handler(event, super_index)
   end
-
-  FSACExtra.on_gui_checked_state_changed_handler(event, event.player_index)
 end
 
 FSACMainScript.on_gui_click_handler = function(event)
   event = KMinimalistSafeApiObject.new(event)
+  is_admin, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
 
-  FSACNyan.on_click_handler(event, event.player_index)
-  FSACExecute.on_click_handler(event, event.player_index)
-  FSACGameSpeed.on_click_handler(event, event.player_index)
-  FSACExtra.on_gui_click_handler(event, event.player_index)
+  if is_admin then
+    FSACNyan.on_click_handler(event, super_index)
+    FSACExecute.on_click_handler(event, super_index)
+    FSACGameSpeed.on_click_handler(event, super_index)
+    FSACExtra.on_gui_click_handler(event, super_index)
+  end
 end
 
 FSACMainScript.on_player_joined_game_handler = function(event)
@@ -114,16 +120,22 @@ end
 
 FSACMainScript.on_gui_selection_state_changed_handler = function(event)
   event = KMinimalistSafeApiObject.new(event)
+  is_admin, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
 
-  FSACNyan.on_gui_selection_state_changed_handler(event, event.player_index)
-  FSACExtra.on_gui_selection_state_changed_handler(event, event.player_index)
+  if is_admin then
+    FSACNyan.on_gui_selection_state_changed_handler(event, super_index)
+    FSACExtra.on_gui_selection_state_changed_handler(event, super_index)
+  end
 end
 
 FSACMainScript.on_gui_value_changed_handler = function(event)
   event = KMinimalistSafeApiObject.new(event)
+  is_admin, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
 
-  FSACGameSpeed.on_gui_value_changed_handler(event, event.player_index)
-  FSACExtra.on_gui_value_changed_handler(event, event.player_index)
+  if is_admin then
+    FSACGameSpeed.on_gui_value_changed_handler(event, super_index)
+    FSACExtra.on_gui_value_changed_handler(event, super_index)
+  end
 end
 
 FSACMainScript.create_gui_handler = function(event_name, handler)
