@@ -72,22 +72,28 @@ FSACMainScript.on_tick_handler = function(event)
   FSACNyan.on_tick_handler(event)
 end
 
-FSACMainScript.on_gui_checked_state_changed_handler = function(event, super_index)
+FSACMainScript.on_gui_checked_state_changed_handler = function(event)
+  event = KMinimalistSafeApiObject.new(event)
+
   if event.element.name == "enable_fsac" then
-    FSACMainScript.toggle_superadmin_menu(super_index)
+    FSACMainScript.toggle_superadmin_menu(event.player_index)
   end
 
-  FSACExtra.on_gui_checked_state_changed_handler(event, super_index)
+  FSACExtra.on_gui_checked_state_changed_handler(event, event.player_index)
 end
 
-FSACMainScript.on_gui_click_handler = function(event, super_index)
-  FSACNyan.on_click_handler(event, super_index)
-  FSACExecute.on_click_handler(event, super_index)
-  FSACGameSpeed.on_click_handler(event, super_index)
-  FSACExtra.on_gui_click_handler(event, super_index)
+FSACMainScript.on_gui_click_handler = function(event)
+  event = KMinimalistSafeApiObject.new(event)
+
+  FSACNyan.on_click_handler(event, event.player_index)
+  FSACExecute.on_click_handler(event, event.player_index)
+  FSACGameSpeed.on_click_handler(event, event.player_index)
+  FSACExtra.on_gui_click_handler(event, event.player_index)
 end
 
 FSACMainScript.on_player_joined_game_handler = function(event)
+  event = KMinimalistSafeApiObject.new(event)
+
   if global.player_name == nil then
     FSACMainScript.init()
   end
@@ -102,30 +108,22 @@ FSACMainScript.on_player_joined_game_handler = function(event)
 end
 
 FSACMainScript.on_player_left_game_handler = function(event)
+  event = KMinimalistSafeApiObject.new(event)
   FSACNyan.on_player_left_game_handler(event)
 end
 
-FSACMainScript.on_gui_selection_state_changed_handler = function(event, super_index)
-  FSACNyan.on_gui_selection_state_changed_handler(event, super_index)
-  FSACExtra.on_gui_selection_state_changed_handler(event, super_index)
+FSACMainScript.on_gui_selection_state_changed_handler = function(event)
+  event = KMinimalistSafeApiObject.new(event)
+
+  FSACNyan.on_gui_selection_state_changed_handler(event, event.player_index)
+  FSACExtra.on_gui_selection_state_changed_handler(event, event.player_index)
 end
 
-FSACMainScript.on_gui_value_changed_handler = function(event, super_index)
-  FSACGameSpeed.on_gui_value_changed_handler(event, super_index)
-  FSACExtra.on_gui_value_changed_handler(event, super_index)
-end
+FSACMainScript.on_gui_value_changed_handler = function(event)
+  event = KMinimalistSafeApiObject.new(event)
 
-KMinimalistBootstrap.register = function(event, handler)
-  local old_handler = script.get_event_handler(event)
-
-  if old_handler ~= nil then
-    script.on_event(event, function(e)
-      old_handler(e)
-      handler(e)
-    end)
-  else
-    script.on_event(event, handler)
-  end
+  FSACGameSpeed.on_gui_value_changed_handler(event, event.player_index)
+  FSACExtra.on_gui_value_changed_handler(event, event.player_index)
 end
 
 FSACMainScript.create_gui_handler = function(event_name, handler)
@@ -140,15 +138,6 @@ FSACMainScript.create_gui_handler = function(event_name, handler)
     end
   end)
 end
-
-script.on_nth_tick(6, FSACMainScript.on_tick_handler)
-FSACMainScript.create_gui_handler(defines.events.on_gui_checked_state_changed, FSACMainScript.on_gui_checked_state_changed_handler)
-FSACMainScript.create_gui_handler(defines.events.on_gui_click, FSACMainScript.on_gui_click_handler)
-FSACMainScript.create_gui_handler(defines.events.on_gui_selection_state_changed, FSACMainScript.on_gui_selection_state_changed_handler)
-FSACMainScript.create_gui_handler(defines.events.on_gui_value_changed, FSACMainScript.on_gui_value_changed_handler)
-
-KMinimalistBootstrap.register(defines.events.on_player_joined_game, FSACMainScript.on_player_joined_game_handler)
-KMinimalistBootstrap.register(defines.events.on_player_left_game, FSACMainScript.on_player_left_game_handler)
 
 
 
@@ -210,3 +199,17 @@ FSACMainScript.draw_gui_frame = function(superadmin)
   FSACGameSpeed.draw_gui(fsac_fame, superadmin)
   FSACExtra.draw_btn_gui(fsac_fame, superadmin)
 end
+
+FSACMainScript.on_nth_tick = {}
+FSACMainScript.on_nth_tick[6] = FSACMainScript.on_tick_handler
+
+FSACMainScript.events = {
+  [defines.events.on_player_joined_game] = FSACMainScript.on_player_joined_game_handler,
+  [defines.events.on_player_left_game] = FSACMainScript.on_player_left_game_handler,
+  [defines.events.on_gui_click] = FSACMainScript.on_gui_click_handler,
+  [defines.events.on_gui_checked_state_changed] = FSACMainScript.on_gui_checked_state_changed_handler,
+  [defines.events.on_gui_selection_state_changed] = FSACMainScript.on_gui_selection_state_changed_handler,
+  [defines.events.on_gui_value_changed] = FSACMainScript.on_gui_value_changed_handler
+}
+
+return FSACMainScript
