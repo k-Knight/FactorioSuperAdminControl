@@ -28,6 +28,11 @@ FSACExtra.run_registrations = function(admin)
     { width_f = 200 },
     false
   )
+  KMinimalistStyling.define_style(
+    "fsac_extra_string",
+    { width_f = 135, horizontal_padding = 2, horizontal_margin = 0 },
+    false
+  )
 
   for _, func in ipairs(FSACExtra.registrations) do
     func(admin)

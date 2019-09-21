@@ -90,6 +90,38 @@ FSACExtraPlayerTools.give_op_armor = function(player)
   end
 end
 
+FSACExtraPlayerTools.teleport_to_player = function(superadmin)
+  local player = KMinimalistSafeApiObject.new(game.players[superadmin.extras.player_tools.player_name])
+  local target_player = KMinimalistSafeApiObject.new(game.players[superadmin.extras.player_tools.tp_player_name])
+
+  local available_position = target_player.surface.find_non_colliding_position("character", target_player.position, 10.0, 0.25)
+  if available_position ~= nil then
+    player.teleport(available_position)
+  end
+end
+
+FSACExtraPlayerTools.teleport_to_position = function(superadmin)
+  local player = KMinimalistSafeApiObject.new(game.players[superadmin.extras.player_tools.player_name])
+  local extra_gui = FSACExtra.get_wrapper_frame(superadmin)
+  local x_pos = tonumber(extra_gui.ex_pt_flow_10.x_pos_string.text)
+  local y_pos = tonumber(extra_gui.ex_pt_flow_10.y_pos_string.text)
+
+  if x_pos ~= nil and y_pos ~= nil then
+    player.teleport({x_pos, y_pos})
+  end
+end
+
+FSACExtraPlayerTools.teleport_to_corpse = function(superadmin)
+  local player = KMinimalistSafeApiObject.new(game.players[superadmin.extras.player_tools.player_name])
+
+  for key, entity in pairs(player.surface.find_entities_filtered{position=player.position, radius=500, name="character-corpse"}) do
+    local available_position = player.surface.find_non_colliding_position("character", entity.position, 20.0, 0.25)
+    if available_position ~= nil then
+      player.teleport(available_position)
+    end
+  end
+end
+
 FSACExtraPlayerTools.on_click_handler = function(event, superadmin)
   if superadmin.extras.player_tools == nil then
     return
@@ -121,6 +153,14 @@ FSACExtraPlayerTools.on_click_handler = function(event, superadmin)
     FSACExtraPlayerTools.clear_armor(player)
   elseif event.element.name == "ex_pt_rm_all_armor" then
     FSACExtraPlayerTools.delete_all_armor(player)
+  elseif event.element.name == "ex_pt_rm_all_armor" then
+    FSACExtraPlayerTools.delete_all_armor(player)
+  elseif event.element.name == "ex_pt_tp_p" then
+    FSACExtraPlayerTools.teleport_to_player(superadmin)
+  elseif event.element.name == "ex_pt_tp_l" then
+    FSACExtraPlayerTools.teleport_to_position(superadmin)
+  elseif event.element.name == "ex_pt_tp_o_pc" then
+    FSACExtraPlayerTools.teleport_to_corpse(superadmin)
   end
 end
 
@@ -132,6 +172,8 @@ FSACExtraPlayerTools.on_select_handler = function(event, superadmin)
   if event.element.name == "ex_pt_dropdown" then
     superadmin.extras.player_tools.player_name = event.element.items[event.element.selected_index]
     FSACExtraPlayerTools.update_values(game.players[superadmin.extras.player_tools.player_name])
+  elseif event.element.name == "ex_pt_dropdown" then
+    superadmin.extras.player_tools.tp_player_name = event.element.items[event.element.selected_index]
   end
 end
 
@@ -165,9 +207,6 @@ FSACExtraPlayerTools.on_value_handler = function(event, superadmin)
       FSACExtraPlayerTools.update_values(player)
     elseif event.element.name == "ex_pt_mine_slider" then
       player.character_mining_speed_modifier = event.element.slider_value
-      FSACExtraPlayerTools.update_values(player)
-    elseif event.element.name == "ex_pt_run_slider" then
-      player.character_running_speed_modifier = event.element.slider_value
       FSACExtraPlayerTools.update_values(player)
     end
   end
@@ -282,7 +321,7 @@ FSACExtraPlayerTools.draw = function(frame, superadmin)
   KMinimalistStyling.apply_style(frame.ex_pt_flow_7.ex_pt_run_slider, { width_f = 400, margin = 0 })
 
   frame.add{type = "flow", name="ex_pt_flow_8", direction="horizontal"}
-  KMinimalistStyling.apply_style(frame.ex_pt_flow_8, "fsac_extra_flow", { bottom_margin = 10 })
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_8, "fsac_extra_flow")
 
   frame.ex_pt_flow_8.add{type = "label", name="ex_pt_eq_label", caption = "[font=default-semibold]Equipment manipulation: [/font]"}
   KMinimalistStyling.apply_style(frame.ex_pt_flow_8.ex_pt_eq_label, "fsac_extra_label", { width_f = 311 })
@@ -295,6 +334,44 @@ FSACExtraPlayerTools.draw = function(frame, superadmin)
 
   frame.ex_pt_flow_8.add{type = "button", name="ex_pt_rm_all_armor", caption = "Remove All Armor", mouse_button_filter = {"left"}}
   KMinimalistStyling.apply_style(frame.ex_pt_flow_8.ex_pt_rm_all_armor, "fsac_extra_btn")
+
+  frame.add{type = "flow", name="ex_pt_flow_9", direction="horizontal"}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_9, "fsac_extra_flow")
+
+  frame.ex_pt_flow_9.add{type = "label", name="ex_pt_tp_p_label", caption = "[font=default-semibold]Teleport to player: [/font]"}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_9.ex_pt_tp_p_label, "fsac_extra_label", { width_f = 311 })
+
+  frame.ex_pt_flow_9.add{type = "drop-down", name = "ex_tp_p_dropdown", selected_index = 1, items = players_names}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_9.ex_tp_p_dropdown, "fsac_extra_btn", { width_f = 278 })
+
+  superadmin.extras.player_tools.tp_player_name = players_names[1]
+
+  frame.ex_pt_flow_9.add{type = "button", name="ex_pt_tp_p", caption = "Teleport", mouse_button_filter = {"left"}}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_9.ex_pt_tp_p, "fsac_extra_btn")
+
+  frame.add{type = "flow", name="ex_pt_flow_10", direction="horizontal"}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_10, "fsac_extra_flow")
+
+  frame.ex_pt_flow_10.add{type = "label", name="ex_pt_tp_l_label", caption = "[font=default-semibold]Teleport to location: [/font]"}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_10.ex_pt_tp_l_label, "fsac_extra_label", { width_f = 311 })
+
+  frame.ex_pt_flow_10.add{type = "textfield", name = "x_pos_string"}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_10.x_pos_string, "fsac_extra_string")
+
+  frame.ex_pt_flow_10.add{type = "textfield", name = "y_pos_string"}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_10.y_pos_string, "fsac_extra_string")
+
+  frame.ex_pt_flow_10.add{type = "button", name="ex_pt_tp_l", caption = "Teleport", mouse_button_filter = {"left"}}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_10.ex_pt_tp_l, "fsac_extra_btn")
+
+  frame.add{type = "flow", name="ex_pt_flow_11", direction="horizontal"}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_11, "fsac_extra_flow", { bottom_margin = 10 })
+
+  frame.ex_pt_flow_11.add{type = "label", name="ex_pt_tp_o_label", caption = "[font=default-semibold]Other teleportation options: [/font]"}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_11.ex_pt_tp_o_label, "fsac_extra_label", { width_f = 597 })
+
+  frame.ex_pt_flow_11.add{type = "button", name="ex_pt_tp_o_pc", caption = "To Player Corpse", mouse_button_filter = {"left"}}
+  KMinimalistStyling.apply_style(frame.ex_pt_flow_11.ex_pt_tp_o_pc, "fsac_extra_btn")
 
   FSACExtraPlayerTools.update_values(game.players[superadmin.extras.player_tools.player_name])
 end
