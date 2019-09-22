@@ -33,7 +33,7 @@ FSACMainScript.init = function()
   FSACSuperAdminManager.init(global.player_name)
 end
 
-FSACMainScript.version = "0.1.0.1"
+FSACMainScript.version = "0.1.0.2"
 
 FSACMainScript.check_version = function()
   if global.fsac_version == nil then

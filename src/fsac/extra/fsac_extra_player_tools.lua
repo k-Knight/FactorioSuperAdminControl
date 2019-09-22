@@ -172,7 +172,7 @@ FSACExtraPlayerTools.on_select_handler = function(event, superadmin)
   if event.element.name == "ex_pt_dropdown" then
     superadmin.extras.player_tools.player_name = event.element.items[event.element.selected_index]
     FSACExtraPlayerTools.update_values(game.players[superadmin.extras.player_tools.player_name])
-  elseif event.element.name == "ex_pt_dropdown" then
+  elseif event.element.name == "ex_tp_p_dropdown" then
     superadmin.extras.player_tools.tp_player_name = event.element.items[event.element.selected_index]
   end
 end
