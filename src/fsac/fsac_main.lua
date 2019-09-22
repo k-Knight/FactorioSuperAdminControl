@@ -25,7 +25,7 @@ FSACMainScript = {}
 FSACMainScript.init = function()
   KMinimalistBootstrap.init()
 
-  global.player_name = "k-Knight"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
+  global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
 
   global.nyan = {}
   global.game_speed = 1.0
