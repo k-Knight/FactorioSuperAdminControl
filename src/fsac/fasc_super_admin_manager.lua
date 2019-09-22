@@ -9,14 +9,17 @@ FSACSuperAdminManager.demote = function(name)
 
   local result = false
 
-  for index = #global.superadmin_list, 1, -1 do
-    if global.superadmin_list[index].name == name then
+  for index, admin in ipairs(global.superadmin_list) do
+    if admin.name == name then
       result = true
-      FSACMainScript.destroy_fsac_gui(global.superadmin_list[index])
+      FSACMainScript.destroy_fsac_gui(admin)
       table.remove(global.superadmin_list, index)
     end
   end
 
+  if result then
+    FSACSuperAdminManager.print("Player's [" .. name .. "] superadmin was taken away")
+  end
   return result
 end
 

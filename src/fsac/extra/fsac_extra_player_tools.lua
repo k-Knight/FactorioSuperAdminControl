@@ -208,6 +208,9 @@ FSACExtraPlayerTools.on_value_handler = function(event, superadmin)
     elseif event.element.name == "ex_pt_mine_slider" then
       player.character_mining_speed_modifier = event.element.slider_value
       FSACExtraPlayerTools.update_values(player)
+    elseif event.element.name == "ex_pt_run_slider" then
+      player.character_running_speed_modifier = event.element.slider_value
+      FSACExtraPlayerTools.update_values(player)
     end
   end
 end
@@ -395,5 +398,3 @@ FSACExtra.static_register(
     on_value = FSACExtraPlayerTools.on_value_handler
   }
 )
-
-

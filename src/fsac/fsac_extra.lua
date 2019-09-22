@@ -11,27 +11,27 @@ FSACExtra.run_registrations = function(admin)
   KMinimalistStyling.define_style(
     "fsac_extra_flow",
     { horizontal_margin = 5, top_margin = 5, horizontal_spacing = 8, vertical_align = "center" },
-    false
+    true
   )
   KMinimalistStyling.define_style(
     "fsac_extra_btn",
     { width_f = 135, horizontal_padding = 2, horizontal_margin = 0 },
-    false
+    true
   )
   KMinimalistStyling.define_style(
     "fsac_extra_label",
     { padding = 0, margin = 0 },
-    false
+    true
   )
   KMinimalistStyling.define_style(
     "fsac_extra_drdwn",
     { width_f = 200 },
-    false
+    true
   )
   KMinimalistStyling.define_style(
     "fsac_extra_string",
     { width_f = 135, horizontal_padding = 2, horizontal_margin = 0 },
-    false
+    true
   )
 
   for _, func in ipairs(FSACExtra.registrations) do
@@ -173,10 +173,6 @@ FSACExtra.add_functionality = function(name, button_caption, draw_function, hand
 end
 
 FSACExtra.register_functionality = function(name, button_caption, draw_function, handlers, admin)
-  if global.player_name == nil then
-    init_mod()
-  end
-
   if type(button_caption) ~= "string" or type(draw_function) ~= "function" then
     return false
   end

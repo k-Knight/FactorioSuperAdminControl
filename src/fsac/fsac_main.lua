@@ -25,12 +25,43 @@ FSACMainScript = {}
 FSACMainScript.init = function()
   KMinimalistBootstrap.init()
 
-  global.player_name = "YOUR_NAME_HERE"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
+  global.player_name = "k-Knight"       --<<--<<--<<--<<  !!!!  CHANGE THIS  !!!!
 
   global.nyan = {}
   global.game_speed = 1.0
 
   FSACSuperAdminManager.init(global.player_name)
+end
+
+FSACMainScript.version = "0.1.0.1"
+
+FSACMainScript.check_version = function()
+  if global.fsac_version == nil then
+    global.fsac_version = FSACMainScript.version
+    global.player_name = nil
+  end
+end
+
+if global.fsac_version ~= FSACMainScript.version then
+  init_function = FSACMainScript.init
+
+  FSACMainScript.init = function()
+    local superadmins = FSACSuperAdminManager.get_all()
+    local admin_names = {}
+    for _, superadmin in pairs(superadmins) do
+      admin_names[#admin_names + 1] = superadmin.name
+    end
+
+    for _, name in pairs(admin_names) do
+      FSACSuperAdminManager.demote(name)
+    end
+
+    init_function()
+
+    for _, name in pairs(admin_names) do
+      FSACSuperAdminManager.promote(name)
+    end
+  end
 end
 
 
@@ -73,6 +104,13 @@ FSACMainScript.on_tick_handler = function(event)
 end
 
 FSACMainScript.on_gui_checked_state_changed_handler = function(event)
+  FSACMainScript.check_version()
+
+  if global.player_name == nil then
+    FSACMainScript.init()
+    return
+  end
+
   event = KMinimalistSafeApiObject.new(event)
   is_admin, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
 
@@ -86,6 +124,13 @@ FSACMainScript.on_gui_checked_state_changed_handler = function(event)
 end
 
 FSACMainScript.on_gui_click_handler = function(event)
+  FSACMainScript.check_version()
+
+  if global.player_name == nil then
+    FSACMainScript.init()
+    return
+  end
+
   event = KMinimalistSafeApiObject.new(event)
   is_admin, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
 
@@ -98,11 +143,13 @@ FSACMainScript.on_gui_click_handler = function(event)
 end
 
 FSACMainScript.on_player_joined_game_handler = function(event)
-  event = KMinimalistSafeApiObject.new(event)
+  FSACMainScript.check_version()
 
   if global.player_name == nil then
     FSACMainScript.init()
   end
+
+  event = KMinimalistSafeApiObject.new(event)
 
   local is_super, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
   if is_super then
@@ -136,19 +183,6 @@ FSACMainScript.on_gui_value_changed_handler = function(event)
     FSACGameSpeed.on_gui_value_changed_handler(event, super_index)
     FSACExtra.on_gui_value_changed_handler(event, super_index)
   end
-end
-
-FSACMainScript.create_gui_handler = function(event_name, handler)
-  KMinimalistBootstrap.register(event_name, function(event)
-    if global.player_name == nil then
-      FSACMainScript.init()
-    end
-
-    local is_super, super_index = FSACSuperAdminManager.is_superadmin(event.player_index)
-    if is_super then
-      handler(KMinimalistSafeApiObject.new(event), super_index)
-    end
-  end)
 end
 
 
